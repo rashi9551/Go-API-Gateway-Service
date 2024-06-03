@@ -1,0 +1,163 @@
+syntax = "proto3";
+package user_package;
+
+service User {
+    rpc Register(RegisterRequest) returns (RegisterResponse) {}
+    rpc CheckUser(CheckUserRequest) returns (CheckUserResponse) {}
+    rpc ResendOtp(ResendOtpRequest) returns (ResendOtpResponse) {}
+    rpc CheckGoogleLoginUser(CheckGoogleLoginUserRequest) returns (CheckGoogleLoginUserResponse) {}
+    rpc CheckLoginUser(CheckLoginUserRequest) returns (CheckLoginUserResponse) {}
+    rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
+    rpc ProfileUpdate(ProfileUpdateRequest) returns (ProfileUpdateResponse) {}
+    rpc AdminLogin(AdminLoginRequest) returns (AdminLoginResponse) {}
+    rpc AdminGetData(Empty) returns (AdminGetDataResponse) {}
+    rpc AdminGetBlockedData(Empty) returns (AdminGetBlockedDataResponse) {}
+    rpc AdminBlockUser(AdminBlockUserRequest) returns (AdminBlockUserResponse) {}
+    rpc AdminUnblockUser(AdminUnblockUserRequest) returns (AdminUnblockUserResponse) {}
+}
+
+message RegisterRequest {
+    string name = 1;
+    string email = 2;
+    string mobile = 3;
+    string password = 4;
+    string referred_Code = 5;
+    string otp = 6;
+    string token =7;
+    bytes userImage = 8;
+}
+message RegisterResponse {
+    string message = 1;
+}
+
+
+message CheckUserRequest {
+    string email = 1;
+    string mobile = 2;
+}
+
+message CheckUserResponse {
+    string message = 1;
+    string token = 2;
+
+}
+
+
+message ResendOtpResponse {
+    string message = 1;
+    string token = 2;
+}
+
+message ResendOtpRequest {
+    string email = 1;
+    string name = 2;
+}
+
+
+
+
+message CheckGoogleLoginUserRequest {
+    string email = 1;
+}
+
+message CheckGoogleLoginUserResponse {
+    string message = 1;
+    string name = 2;
+    string token = 3;
+    string _id = 4;
+}
+
+
+message CheckLoginUserRequest {
+    int64 mobile = 1;
+}
+
+message CheckLoginUserResponse {
+    string message = 1;
+    string name = 2;
+    string token = 3;
+    string _id = 4;
+}
+
+
+message GetUserRequest {
+    string id = 1;
+}
+
+message GetUserResponse{
+    string name = 2;
+    string mobile = 3;
+    string email = 4;
+    string account_status = 5;
+    string referral_code = 6;
+    string formattedDate = 7;
+    string userImage = 8;
+}
+message ProfileUpdateRequest {
+    string id = 1;
+    string name = 2;
+    string mobile = 3;
+    string email = 4;
+}
+
+message ProfileUpdateResponse{
+    string message = 1;
+    userDatas formattedUserData = 2;
+}
+
+message userDatas{
+    string name = 2;
+    string mobile = 3;
+    string email = 4;
+    string account_status = 5;
+    string referral_code = 6;
+    string formattedDate = 7;
+    string userImage = 8;
+}
+
+
+message AdminLoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message AdminLoginResponse{
+    string message = 1;
+    string email =2;
+    string token =3;
+}
+message Empty {
+
+}
+
+message AdminGetDataResponse {
+    repeated user User = 1;
+}
+
+message user {
+    string _id = 7;
+    string name = 1;
+    string email = 2;
+    string mobile = 3;
+    string userImage = 4;
+    string referral_code = 5;
+    string account_status = 6;
+}
+
+message AdminGetBlockedDataResponse {
+    repeated user User = 1;
+}
+
+
+message AdminBlockUserRequest {
+   string id=1; 
+}
+message AdminBlockUserResponse {
+    string message = 1;
+}
+message AdminUnblockUserRequest {
+   string id=1; 
+}
+message AdminUnblockUserResponse {
+    string message = 1;
+}
