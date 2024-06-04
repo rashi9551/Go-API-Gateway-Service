@@ -9,6 +9,7 @@ import http from 'http'
 import userRoute from './modules/user/route'
 import 'dotenv/config';
 import adminRoute from './modules/admin/route'
+import driverRoute from './modules/driver/route'
 
 
 class App{
@@ -39,6 +40,7 @@ class App{
     private routes():void{
         this.app.use('/api/user',userRoute)
         this.app.use('/api/admin',adminRoute)
+        this.app.use('/api/driver',driverRoute)
     }
 
     public startServer(port:number):void{

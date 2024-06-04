@@ -1,9 +1,9 @@
 import {Response,Request} from 'express'
-import { UserService } from '../user/config/grpc-client/user.client';
-import { StatusCode } from '../../interfaces/enum'
+import { UserService } from '../../user/config/grpc-client/user.client';
+import { StatusCode } from '../../../interfaces/enum'
 import { log } from '@grpc/grpc-js/build/src/logging';
 
-export default class adminController{
+export default class userAdminController{
     login=(req:Request,res:Response)=>{
         try {
             console.log(req.body,"dhgfavjhsd");
