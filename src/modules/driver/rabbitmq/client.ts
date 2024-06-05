@@ -11,9 +11,8 @@ import Consumer from "./consumer";
 class RabbitMqClient{
     private constructor(){}
 
-    private static instance:RabbitMqClient
+    private static instance:RabbitMqClient;
     private isInitialized = false;
-    
     private producer:Producer |undefined;
     private consumer: Consumer | undefined;
     private connection:Connection |undefined;

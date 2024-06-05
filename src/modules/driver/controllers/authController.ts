@@ -1,8 +1,8 @@
 import { Request,Response,NextFunction } from "express"
-import driverRabbitMqClient from "./rabbitmq/client"
-import { StatusCode } from '../../interfaces/enum'
-import  uploadToS3 from '../../services/s3'
-export default class driverController{
+import driverRabbitMqClient from "../rabbitmq/client"
+import { StatusCode } from '../../../interfaces/enum'
+import  uploadToS3 from '../../../services/s3'
+export default class driverAuthController{
 
     checkLogin=async(req: Request,
         res: Response,
