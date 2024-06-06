@@ -59,6 +59,7 @@ export default class userController{
         console.log(req.body);
         UserService.CheckGoogleLoginUser(req.body,(err:any,result:any)=>{
             if(err){
+                console.log(err);
                 res.status(StatusCode.BadRequest).json({message:err})
             }else{
                 console.log("result ",result);
@@ -79,8 +80,7 @@ export default class userController{
     }
     getUser=(req:Request,res:Response)=>{
         try {
-            
-            console.log(req.query);
+            console.log("its coming");
             UserService.GetUser(req.query,(err:any,result:any)=>{
                 if(err){
                     res.status(StatusCode.BadRequest).json({message:err})
@@ -104,7 +104,7 @@ export default class userController{
                 if(err){
                     res.status(StatusCode.BadRequest).json({message:err})
                 }else{
-                    console.log("result ",result);
+                    console.log("result vanney ",result);
                     res.status(StatusCode.Created).json(result)
                 }
             })

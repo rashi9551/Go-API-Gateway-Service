@@ -1,7 +1,8 @@
 import express,{Application} from 'express'
 import userController from './controller'
 import upload from '../../middleware/multer'
-import auth from '../../middleware/auth'
+import { isValidated } from '../Auth/controller'
+
 const userRoute:Application=express()
 
 const controller=new userController()
@@ -15,7 +16,7 @@ userRoute.post('/resendOtp',controller.resendOtp)
 userRoute.post('/checkGoogleLoginUser',controller.checkGoogleLoginUser);
 userRoute.post('/checkLoginUser',controller.checkLoginUser);
 
-userRoute.get('/userData',auth.verifyToken,controller.getUser);
-userRoute.post('/profileUpdate',auth.verifyToken,controller.profileUpdate);
+userRoute.get('/userData',isValidated,controller.getUser);
+userRoute.post('/profileUpdate',isValidated,controller.profileUpdate);
 
 export default userRoute

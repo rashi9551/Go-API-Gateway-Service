@@ -2,7 +2,7 @@ import express,{Application} from 'express'
 import userAdminController from './controllers/userController'
 import driverAdminController from './controllers/driverControlers'
 import upload from '../../middleware/multer'
-import auth from '../../middleware/auth'
+import { isValidated } from '../Auth/controller'
 
 const adminRoute:Application=express()
 
@@ -11,19 +11,19 @@ const driverController=new driverAdminController()
 
 
 adminRoute.post('/login',userController.login)
-adminRoute.get('/getUserData',auth.verifyToken,userController.getData)
-adminRoute.get('/blockedUserData',auth.verifyToken,userController.getBlockedData)
-adminRoute.post('/blockUser',auth.verifyToken,userController.blockUser)
-adminRoute.post('/unblockUser',auth.verifyToken,userController.unblockUser)
+adminRoute.get('/getUserData',isValidated,userController.getData)
+adminRoute.get('/blockedUserData',isValidated,userController.getBlockedData)
+adminRoute.post('/blockUser',isValidated,userController.blockUser)
+adminRoute.post('/unblockUser',isValidated,userController.unblockUser)
 
 
-adminRoute.get('/pendingDrivers',auth.verifyToken,driverController.pendingDrivers)
-adminRoute.get('/verifiedDrivers',auth.verifyToken,driverController.verifiedDrivers)
-adminRoute.get('/blockedDrivers',auth.verifyToken,driverController.blockedDrivers)
-adminRoute.get('/driverData',auth.verifyToken,driverController.driverData)
-adminRoute.post('/verifyDriver',auth.verifyToken,driverController.verifyDriver)
-adminRoute.post('/rejectDriver',auth.verifyToken,driverController.rejectDriver)
-adminRoute.post('/updateDriverStatus',auth.verifyToken,driverController.updateDriverStatus)
+adminRoute.get('/pendingDrivers',isValidated,driverController.pendingDrivers)
+adminRoute.get('/verifiedDrivers',isValidated,driverController.verifiedDrivers)
+adminRoute.get('/blockedDrivers',isValidated,driverController.blockedDrivers)
+adminRoute.get('/driverData',isValidated,driverController.driverData)
+adminRoute.post('/verifyDriver',isValidated,driverController.verifyDriver)
+adminRoute.post('/rejectDriver',isValidated,driverController.rejectDriver)
+adminRoute.post('/updateDriverStatus',isValidated,driverController.updateDriverStatus)
 
 
 

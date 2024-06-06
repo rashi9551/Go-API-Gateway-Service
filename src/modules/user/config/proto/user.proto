@@ -102,7 +102,7 @@ message ProfileUpdateRequest {
 
 message ProfileUpdateResponse{
     string message = 1;
-    userDatas formattedUserData = 2;
+    userDatas newData = 2;
 }
 
 message userDatas{
