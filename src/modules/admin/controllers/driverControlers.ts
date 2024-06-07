@@ -85,7 +85,7 @@ export default class driverAdminController{
         res: Response,
         next: NextFunction
       ) => {
-        try {
+        try {    
           const operation = "admin-update-status-driver";
           const response: any = await adminRabbitMqClient.produce({...req.query,...req.body}, operation);
     

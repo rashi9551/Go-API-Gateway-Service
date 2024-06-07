@@ -11,9 +11,9 @@ service User {
     rpc ProfileUpdate(ProfileUpdateRequest) returns (ProfileUpdateResponse) {}
     rpc AdminLogin(AdminLoginRequest) returns (AdminLoginResponse) {}
     rpc AdminGetData(Empty) returns (AdminGetDataResponse) {}
+    rpc AdminGetUserData(AdminGetUserDataRequest) returns (AdminGetUserDataResponse) {}
     rpc AdminGetBlockedData(Empty) returns (AdminGetBlockedDataResponse) {}
-    rpc AdminBlockUser(AdminBlockUserRequest) returns (AdminBlockUserResponse) {}
-    rpc AdminUnblockUser(AdminUnblockUserRequest) returns (AdminUnblockUserResponse) {}
+    rpc AdminUpdateUserStatus(AdminUpdateUserStatusRequest) returns (AdminUpdateUserStatusResponse) {}
 }
 
 message RegisterRequest {
@@ -131,7 +131,7 @@ message Empty {
 }
 
 message AdminGetDataResponse {
-    repeated user User = 1;
+    repeated user User=1;
 }
 
 message user {
@@ -149,15 +149,23 @@ message AdminGetBlockedDataResponse {
 }
 
 
-message AdminBlockUserRequest {
+message AdminUpdateUserStatusRequest {
    string id=1; 
+   string status=2;
 }
-message AdminBlockUserResponse {
+message AdminUpdateUserStatusResponse {
     string message = 1;
 }
-message AdminUnblockUserRequest {
-   string id=1; 
+message AdminGetUserDataRequest{
+    string id=1;
 }
-message AdminUnblockUserResponse {
-    string message = 1;
+
+message AdminGetUserDataResponse{
+   string _id = 7;
+    string name = 1;
+    string email = 2;
+    string mobile = 3;
+    string userImage = 4;
+    string referral_code = 5;
+    string account_status = 6;
 }

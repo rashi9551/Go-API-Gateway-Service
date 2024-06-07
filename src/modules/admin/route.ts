@@ -12,9 +12,9 @@ const driverController=new driverAdminController()
 
 adminRoute.post('/login',userController.login)
 adminRoute.get('/getUserData',isValidated,userController.getData)
+adminRoute.get('/userData',isValidated,userController.userData)
 adminRoute.get('/blockedUserData',isValidated,userController.getBlockedData)
-adminRoute.post('/blockUser',isValidated,userController.blockUser)
-adminRoute.post('/unblockUser',isValidated,userController.unblockUser)
+adminRoute.post('/updateUserStatus',isValidated,userController.updateUserStatus)
 
 
 adminRoute.get('/pendingDrivers',isValidated,driverController.pendingDrivers)
