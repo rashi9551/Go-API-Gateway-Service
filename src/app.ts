@@ -10,6 +10,7 @@ import userRoute from './modules/user/route'
 import 'dotenv/config';
 import adminRoute from './modules/admin/route'
 import driverRoute from './modules/driver/route'
+import rideRoute from './modules/ride/route'
 
 
 class App{
@@ -41,6 +42,7 @@ class App{
         this.app.use('/api/user',userRoute)
         this.app.use('/api/admin',adminRoute)
         this.app.use('/api/driver',driverRoute)
+        this.app.use('/api/ride',rideRoute)
     }
 
     public startServer(port:number):void{

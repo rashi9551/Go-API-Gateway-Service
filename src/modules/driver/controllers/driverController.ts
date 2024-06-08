@@ -12,7 +12,8 @@ export default class driverControl{
           const operation = "driver-getData";
           console.log("vannu",req.query);
           const response: any = await driverRabbitMqClient.produce({...req.query}, operation);
-    
+          console.log(response,"ithu driver data");
+          
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
