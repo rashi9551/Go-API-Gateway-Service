@@ -9,6 +9,7 @@ export default class rideController{
             console.log(req.query);
             const operation ='get-current-ride'
             const response = await rideRabbitMqClient.produce({...req.query},operation)
+            console.log(response);
             res.status(StatusCode.Created).json(response)
         } catch (e) {
             console.log(e);
