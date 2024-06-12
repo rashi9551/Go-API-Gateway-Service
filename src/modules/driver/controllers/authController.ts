@@ -82,8 +82,10 @@ export default class driverAuthController{
             let aadharImageUrl=""
             let licenseImageUrl=""
             if(files){
-                aadharImageUrl=await uploadToS3(files["aadharImage"][0])
-                licenseImageUrl=await uploadToS3(files["licenseImage"][0])
+              [aadharImageUrl, licenseImageUrl] = await Promise.all([
+                uploadToS3(files["aadharImage"][0]),
+                uploadToS3(files["licenseImage"][0])
+            ]);
                 console.log(licenseImageUrl);
                 console.log(aadharImageUrl);
                 
@@ -125,8 +127,10 @@ export default class driverAuthController{
             let rcImageUrl=""
             let carImageUrl=""
             if(files){
-                rcImageUrl=await uploadToS3(files["rcImage"][0])
-                carImageUrl=await uploadToS3(files["carImage"][0])
+            [rcImageUrl, carImageUrl] = await Promise.all([
+                uploadToS3(files["rcImage"][0]),
+                uploadToS3(files["carImage"][0])
+            ]);
                 console.log(carImageUrl,rcImageUrl);
                 
             }
