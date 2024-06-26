@@ -9,10 +9,12 @@ export default class driverAuthController{
         next: NextFunction
       ) => {
         try {
+          console.log(req.body,"driver login");
+          
             const {mobile}=req.body
           const operation = "login-check";
           const response: any = await driverRabbitMqClient.produce({mobile}, operation);
-    
+          
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
@@ -23,10 +25,12 @@ export default class driverAuthController{
         next: NextFunction
       ) => {
         try {
+          console.log(req.body,"driver login");
             const {email}=req.body
           const operation = "google-login";
           const response: any = await driverRabbitMqClient.produce({email}, operation);
-    
+          console.log(response);
+          
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);

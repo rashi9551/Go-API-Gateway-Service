@@ -2,7 +2,7 @@ import express,{Application} from 'express'
 import upload from '../../middleware/multer'
 import driverAuthController from './controllers/authController'
 import driverControl from './controllers/driverController'
-import { isValidated } from '../Auth/controller'
+import { isValidated } from '../auth/controller'
 
 const driverRoute:Application=express()
 const AuthController= new driverAuthController()

@@ -1,6 +1,6 @@
 import express,{Application} from 'express'
 import rideControl from './controller'
-import { isValidated } from '../Auth/controller'
+import { isValidated } from '../auth/controller'
 
 const rideRoute:Application=express()
 const rideController=new rideControl()

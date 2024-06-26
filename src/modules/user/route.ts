@@ -1,7 +1,7 @@
 import express,{Application} from 'express'
 import userController from './controller'
 import upload from '../../middleware/multer'
-import { isValidated } from '../Auth/controller'
+import { isValidated } from '../auth/controller'
 
 const userRoute:Application=express()
 
@@ -18,5 +18,7 @@ userRoute.post('/checkLoginUser',controller.checkLoginUser);
 
 userRoute.get('/userData',isValidated,controller.getUser);
 userRoute.post('/profileUpdate',isValidated,controller.profileUpdate);
+userRoute.post('/addWalletBalance',isValidated,controller.addWalletBalance);
+userRoute.post('/paymentStripe',isValidated,controller.payment);
 
 export default userRoute

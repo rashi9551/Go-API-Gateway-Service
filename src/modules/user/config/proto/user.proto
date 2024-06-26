@@ -9,6 +9,7 @@ service User {
     rpc CheckLoginUser(CheckLoginUserRequest) returns (CheckLoginUserResponse) {}
     rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
     rpc ProfileUpdate(ProfileUpdateRequest) returns (ProfileUpdateResponse) {}
+    rpc addWalletBalance(addWalletBalanceRequest) returns (addWalletBalanceResponse) {}
     rpc AdminLogin(AdminLoginRequest) returns (AdminLoginResponse) {}
     rpc AdminGetData(Empty) returns (AdminGetDataResponse) {}
     rpc AdminGetUserData(AdminGetUserDataRequest) returns (AdminGetUserDataResponse) {}
@@ -24,7 +25,7 @@ message RegisterRequest {
     string referred_Code = 5;
     string otp = 6;
     string token =7;
-    bytes userImage = 8;
+    string userImage = 8;
 }
 message RegisterResponse {
     string message = 1;
@@ -87,13 +88,7 @@ message GetUserRequest {
 }
 
 message GetUserResponse{
-    string name = 2;
-    string mobile = 3;
-    string email = 4;
-    string account_status = 5;
-    string referral_code = 6;
-    string formattedDate = 7;
-    string userImage = 8;
+    userDatas newData= 1;
 }
 message ProfileUpdateRequest {
     string id = 1;
@@ -106,15 +101,43 @@ message ProfileUpdateResponse{
     string message = 1;
     userDatas newData = 2;
 }
+message addWalletBalanceRequest {
+    string id = 1;
+    string balance = 2;
+}
 
-message userDatas{
-    string name = 2;
-    string mobile = 3;
-    string email = 4;
-    string account_status = 5;
-    string referral_code = 6;
-    string formattedDate = 7;
-    string userImage = 8;
+message addWalletBalanceResponse{
+    string message = 1;
+}
+message Transaction {
+    string details = 1;
+    int32 amount = 2;
+    string status = 3;
+    string _id = 4;
+    string formattedDate = 5;
+}
+
+message Wallet {
+    int32 balance = 1;
+    repeated Transaction transactions = 2;
+}
+
+message RideDetails {
+    int32 completedRides = 1;
+    int32 cancelledRides = 2;
+}
+
+message userDatas {
+    string name = 1;
+    string mobile = 2;
+    string email = 3;
+    string account_status = 4;
+    string referral_code = 5;
+    string formattedDate = 6;
+    string userImage = 7;
+    Wallet wallet = 8;
+    RideDetails rideDetails = 9;
+    repeated Transaction formattedTransactions = 10;
 }
 
 
