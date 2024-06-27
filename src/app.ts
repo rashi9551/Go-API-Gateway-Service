@@ -11,6 +11,7 @@ import 'dotenv/config';
 import adminRoute from './modules/admin/route'
 import driverRoute from './modules/driver/route'
 import rideRoute from './modules/ride/route'
+import authRoute from './modules/auth/route'
 import { setUpSocketIO } from "./services/socket";
 
 
@@ -45,6 +46,7 @@ class App{
         this.app.use('/api/admin',adminRoute)
         this.app.use('/api/driver',driverRoute)
         this.app.use('/api/ride',rideRoute)
+        this.app.use('/api/auth',authRoute)
     }
 
     public startServer(port:number):void{

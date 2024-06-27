@@ -18,7 +18,7 @@ export default class rideController{
     }
     getAllRides=async(req:Request,res:Response)=>{
         try {
-            console.log(req.query);
+            console.log(req.query,"==========");
             const operation ='get-all-ride'
             const response = await rideRabbitMqClient.produce({...req.query},operation)
             console.log(response);
