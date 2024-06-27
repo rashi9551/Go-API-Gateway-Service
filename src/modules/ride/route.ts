@@ -7,5 +7,6 @@ const rideController=new rideControl()
 
 
 rideRoute.get('/getCurrentRide',isValidated,rideController.getCurrentRide)
+rideRoute.get('/getAllRides',isValidated,rideController.getAllRides)
 
 export default rideRoute

@@ -172,6 +172,7 @@ export default class userController{
     payment=async(req:Request,res:Response)=>{
         try {
             const {balance}=req.body
+            console.log("payment stripe",req.body);
             const stripe = new Stripe(process?.env.STRIPE_SECRET_KEY as string, {
               apiVersion: "2024-06-20",
           });
@@ -192,7 +193,7 @@ export default class userController{
                   },
               ],
               mode: "payment",
-              success_url: `http://localhost:5173/account}`,
+              success_url: `http://localhost:5173/account`,
               cancel_url: "http://localhost:5173/account",
           });
           

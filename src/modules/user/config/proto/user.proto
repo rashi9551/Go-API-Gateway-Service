@@ -10,6 +10,7 @@ service User {
     rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
     rpc ProfileUpdate(ProfileUpdateRequest) returns (ProfileUpdateResponse) {}
     rpc addWalletBalance(addWalletBalanceRequest) returns (addWalletBalanceResponse) {}
+    rpc rideCancelUpdate(rideCancelUpdateRequest) returns (rideCancelUpdateResponse) {}
     rpc AdminLogin(AdminLoginRequest) returns (AdminLoginResponse) {}
     rpc AdminGetData(Empty) returns (AdminGetDataResponse) {}
     rpc AdminGetUserData(AdminGetUserDataRequest) returns (AdminGetUserDataResponse) {}
@@ -107,6 +108,13 @@ message addWalletBalanceRequest {
 }
 
 message addWalletBalanceResponse{
+    string message = 1;
+}
+message rideCancelUpdateRequest {
+    string userId = 1;
+}
+
+message rideCancelUpdateResponse{
     string message = 1;
 }
 message Transaction {

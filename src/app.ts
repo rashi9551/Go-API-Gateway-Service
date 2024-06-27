@@ -11,6 +11,7 @@ import 'dotenv/config';
 import adminRoute from './modules/admin/route'
 import driverRoute from './modules/driver/route'
 import rideRoute from './modules/ride/route'
+import { setUpSocketIO } from "./services/socket";
 
 
 class App{
@@ -20,6 +21,7 @@ class App{
     constructor(){
         this.app=express()
         this.server=http.createServer(this.app)
+        setUpSocketIO(this.server)
         this.applyMiddleware()
         this.routes()
     }
