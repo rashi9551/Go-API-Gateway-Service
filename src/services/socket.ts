@@ -5,11 +5,19 @@ import {generatePIN} from '../utils/generatePIN'
 import rideRabbitMqClient from '../modules/ride/rabbitmq/client'
 import driverRabbitMqClient from "../modules/driver/rabbitmq/client";
 import {UserService} from '../modules/user/config/grpc-client/user.client'
+import jwt from 'jsonwebtoken';
 
 interface Driver {
     _id: string;
 }
 
+interface DecodedToken {
+  clientId: string;
+}
+
+interface AuthenticatedSocket extends Socket {
+  decoded?: DecodedToken;
+}
 
 
 const calculateDistance=(driverLatitude:number,driverLongitude:number,userLatitude:number,userLongitude:number)=>{
@@ -45,9 +53,25 @@ export const setUpSocketIO = (server: HttpServer): void => {
     },
   });
   
+
+  io.use((socket:AuthenticatedSocket, next) => {
+    const token: string | undefined = socket.handshake.query.token as string | undefined;
+    if (!token) {
+      return next(new Error('Authentication error'));
+    }else{
+      jwt.verify(token, process.env.JWT_SECRET as string, (err:any, decoded:any) => {
+        if (err) {
+          return next(new Error('Authentication error'));
+        }
+        socket.decoded = decoded 
+        next();
+      });
+      
+    } 
+  });
+
   io.on("connection", (socket: Socket) => {
     console.log("Client connected:", socket.id);
-
     socket.on("getNearByDrivers", async(rideData: RideDetails) => {
       console.log("nearby drivers edukkunu");
       
