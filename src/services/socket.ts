@@ -114,7 +114,7 @@ export const setUpSocketIO = (server: HttpServer): void => {
       acceptedRideData.driverCoordinates.latitude = driverLatitude;
       acceptedRideData.driverCoordinates.longitude = driverLongitude;
       
-      console.log(acceptedRideData,"data sended");
+      console.log(acceptedRideData,"data sended  ");
       const response = await rideRabbitMqClient.produce(acceptedRideData,"ride-create")
     //   const responses=await driverRabbitMqClient.produce({driverId:acceptedRideData.driver_id},"updateDriverStatus")
     //   console.log(responses,"ithu update response");
@@ -130,6 +130,7 @@ export const setUpSocketIO = (server: HttpServer): void => {
       console.log("pin check",pin);
       const response = await rideRabbitMqClient.produce(pin,"ride-confirm")
       if(response){
+        console.log("ride confirmed ------=-=-=-=-==-=-");
           io.emit("rideConfirmed")
       }else{
           io.emit("error in confirming ride")

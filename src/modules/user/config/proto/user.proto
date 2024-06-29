@@ -11,6 +11,7 @@ service User {
     rpc ProfileUpdate(ProfileUpdateRequest) returns (ProfileUpdateResponse) {}
     rpc addWalletBalance(addWalletBalanceRequest) returns (addWalletBalanceResponse) {}
     rpc rideCancelUpdate(rideCancelUpdateRequest) returns (rideCancelUpdateResponse) {}
+    rpc RidePayment(RidePaymentRequest) returns (RidePaymentResponse) {}
     rpc AdminLogin(AdminLoginRequest) returns (AdminLoginResponse) {}
     rpc AdminGetData(Empty) returns (AdminGetDataResponse) {}
     rpc AdminGetUserData(AdminGetUserDataRequest) returns (AdminGetUserDataResponse) {}
@@ -115,6 +116,16 @@ message rideCancelUpdateRequest {
 }
 
 message rideCancelUpdateResponse{
+    string message = 1;
+}
+message RidePaymentRequest {
+    string paymentMode = 1;
+    string userId = 2;
+    string rideId = 3;
+    int32 amount = 4;
+}
+
+message RidePaymentResponse{
     string message = 1;
 }
 message Transaction {

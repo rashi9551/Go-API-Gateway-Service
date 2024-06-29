@@ -154,9 +154,16 @@ export default class userController{
             console.log(error);
         }
     }
-    addWalletBalance=(req:Request,res:Response)=>{
+    addWalletBalance=async(req:Request,res:Response)=>{
         try {
-            const id=req.query.user_id
+            const { sessionId } = req.body;
+            console.log(req.body,"ithu body 0---0=-=-=-=-=-0-0-0=0-90-")
+            const stripe = new Stripe(process?.env.STRIPE_SECRET_KEY as string, {
+                apiVersion: "2024-06-20",
+            });
+            const session = await stripe.checkout.sessions.retrieve(sessionId);
+            console.log(session);
+            if (session.payment_status === 'paid') {
             UserService.addWalletBalance({...req.body},(err:any,result:any)=>{
                 if(err){
                     res.status(StatusCode.BadRequest).json({message:err})
@@ -165,11 +172,15 @@ export default class userController{
                     res.status(StatusCode.Created).json(result)
                 }
             })
+        } else {
+            res.status(200).json({ paymentStatus: 'failed' });
+            return
+            }
         } catch (error) {
             console.log(error);
         }
     }
-    payment=async(req:Request,res:Response)=>{
+    stripePayment=async(req:Request,res:Response)=>{
         try {
             const {balance}=req.body
             console.log("payment stripe",req.body);
@@ -207,6 +218,23 @@ export default class userController{
             return { error: (error as Error).message };
           }
     }
+    RidePayment=(req:Request,res:Response)=>{
+        try {
+            
+            console.log(req.body,req.query,"=-=-=----=-=-=-=-=-=-=--=-=-=-");            
+            UserService.RidePayment({...req.body,...req.query},(err:any,result:any)=>{
+                if(err){
+                    res.status(StatusCode.BadRequest).json({message:err})
+                }else{
+                    console.log("result vanney ",result);
+                    res.status(StatusCode.Created).json(result)
+                }
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
 
 
     

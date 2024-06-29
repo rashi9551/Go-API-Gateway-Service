@@ -19,6 +19,6 @@ userRoute.post('/checkLoginUser',controller.checkLoginUser);
 userRoute.get('/userData',isValidated,controller.getUser);
 userRoute.post('/profileUpdate',isValidated,controller.profileUpdate);
 userRoute.post('/addWalletBalance',isValidated,controller.addWalletBalance);
-userRoute.post('/paymentStripe',isValidated,controller.payment);
-
+userRoute.post('/paymentStripe',isValidated,controller.stripePayment);
+userRoute.post('/payment',isValidated,controller.RidePayment)
 export default userRoute
