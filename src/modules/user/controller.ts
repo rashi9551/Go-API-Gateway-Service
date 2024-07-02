@@ -1,8 +1,14 @@
-import {Response,Request} from 'express'
+import {Response,Request, response} from 'express'
 import { UserService } from './config/grpc-client/user.client'
 import { StatusCode } from '../../interfaces/enum'
 import uploadToS3 from '../../services/s3'
 import Stripe from "stripe";
+import rideControl from '../ride/controller';
+import driverControl from '../driver/controllers/driverController';
+import { Message, RidePayment } from '../../interfaces/interface';
+
+const rideController=new rideControl()
+const driverController=new driverControl()
 
 export default class userController{
     
@@ -141,7 +147,6 @@ export default class userController{
             const {user_id}=req.query
             const id=user_id
             console.log(id);
-            
             UserService.ProfileUpdate({id,...req.body},(err:any,result:any)=>{
                 if(err){
                     res.status(StatusCode.BadRequest).json({message:err})
@@ -182,8 +187,9 @@ export default class userController{
     }
     stripePayment=async(req:Request,res:Response)=>{
         try {
-            const {balance}=req.body
-            console.log("payment stripe",req.body);
+            const amount=req.body.amount
+            const {success_url}=req.body
+            console.log("payment stripe",req.body, amount);
             const stripe = new Stripe(process?.env.STRIPE_SECRET_KEY as string, {
               apiVersion: "2024-06-20",
           });
@@ -198,13 +204,13 @@ export default class userController{
                           product_data: {
                               name: "Wallet recharge",
                           },
-                          unit_amount: Number(balance) * 100,
+                          unit_amount: amount*100,
                       },
                       quantity: 1,
                   },
               ],
               mode: "payment",
-              success_url: `http://localhost:5173/account`,
+              success_url: `${success_url}`,
               cancel_url: "http://localhost:5173/account",
           });
           
@@ -218,11 +224,55 @@ export default class userController{
             return { error: (error as Error).message };
           }
     }
-    RidePayment=(req:Request,res:Response)=>{
+    RidePayment=async(req:Request,res:Response)=>{
         try {
-            
-            console.log(req.body,req.query,"=-=-=----=-=-=-=-=-=-=--=-=-=-");            
-            UserService.RidePayment({...req.body,...req.query},(err:any,result:any)=>{
+            console.log(req.body, req.query, "=-=-=----=-=-=-=-=-=-=--=-=-=-");
+            const razorpayPaymentPromise = (data: RidePayment):Promise<Message> =>
+                new Promise((resolve, reject) => {
+                    UserService.RidePayment(data, (err: any, result: any) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(result);
+                    }
+                    });
+            });
+
+            const data:RidePayment = { ...req.body, ...req.query };
+            const result: Message = await razorpayPaymentPromise(data);
+        
+            if (result.message === 'Success') {
+                console.log(result.message,"user side");
+                
+            const rideResponse:Message = await rideController.rideCompleteUpdate(data);
+        
+            if (rideResponse.message === 'Success') {
+
+                console.log(rideResponse.message,"ride side");
+
+                const driverResponse:Message = await driverController.rideCompleteUpdate(data);
+                
+                if (driverResponse.message === 'Success') {
+                    console.log(driverResponse.message,"driverResponse side");
+
+                return res.status(StatusCode.Created).json(result);
+                } else {
+                return res.status(StatusCode.BadRequest).json({ message: 'Driver update failed' });
+                }
+            } else {
+                return res.status(StatusCode.BadRequest).json({ message: 'Ride update failed' });
+            }
+            } else {
+            return res.status(StatusCode.BadRequest).json({ message: result.message });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    razorpayPayment = async (req: Request, res: Response) => {
+        try {
+            console.log(req.body, req.query, "=-=-=----=-=-=-=-=-=-=--=-=-=-");
+            UserService.razorpayPayment({...req.body, ...req.query},(err:any,result:any)=>{
                 if(err){
                     res.status(StatusCode.BadRequest).json({message:err})
                 }else{
@@ -230,12 +280,11 @@ export default class userController{
                     res.status(StatusCode.Created).json(result)
                 }
             })
+        
         } catch (error) {
             console.log(error);
-        }
+            return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
     }
-    
-
-
-    
+    };
+      
 }

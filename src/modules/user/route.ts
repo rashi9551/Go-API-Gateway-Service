@@ -21,4 +21,5 @@ userRoute.post('/profileUpdate',isValidated,controller.profileUpdate);
 userRoute.post('/addWalletBalance',isValidated,controller.addWalletBalance);
 userRoute.post('/paymentStripe',isValidated,controller.stripePayment);
 userRoute.post('/payment',isValidated,controller.RidePayment)
+userRoute.post('/razorpayPayment',isValidated,controller.razorpayPayment)
 export default userRoute

@@ -1,6 +1,7 @@
 import { Request,Response } from "express"
 import rideRabbitMqClient from './rabbitmq/client'
 import { StatusCode } from "../../interfaces/enum"
+import { Message, RidePayment} from "../../interfaces/interface";
 
 
 export default class rideController{
@@ -26,6 +27,17 @@ export default class rideController{
         } catch (e) {
             console.log(e);
 
+        }
+    }
+    rideCompleteUpdate=async(data:RidePayment):Promise<Message>=>{
+        try {
+            const operation ='ride-complete-update'
+            const response:Message = await rideRabbitMqClient.produce({rideId:data.rideId,paymentMode:data.paymentMode},operation) as Message
+            console.log(response);
+            return(response)
+        } catch (e) {
+            console.log(e);
+            return { message: 'Failed to complete ride update' }; 
         }
     }
 }

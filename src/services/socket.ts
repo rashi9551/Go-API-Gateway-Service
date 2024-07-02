@@ -61,8 +61,9 @@ export const setUpSocketIO = (server: HttpServer): void => {
     }else{
       jwt.verify(token, process.env.JWT_SECRET as string, (err:any, decoded:any) => {
         if (err) {
+          console.log(err,"ithu socket")
           return next(new Error('Authentication error'));
-        }
+          }
         socket.decoded = decoded 
         next();
       });

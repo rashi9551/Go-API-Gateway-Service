@@ -2,6 +2,7 @@ import { Request,Response,NextFunction } from "express"
 import driverRabbitMqClient from "../rabbitmq/client"
 import { StatusCode } from '../../../interfaces/enum'
 import  uploadToS3 from '../../../services/s3'
+import { RidePayment } from "../../../interfaces/interface"
 
 export default class driverControl{
     getDriverData=async(req: Request,
@@ -39,6 +40,15 @@ export default class driverControl{
           const operation = "update-status";
           const response: any = await driverRabbitMqClient.produce({...req.query}, operation);
           res.status(StatusCode.Created).json(response);
+        } catch (e: any) {
+          console.log(e);
+        }
+    }
+    rideCompleteUpdate=async(data:RidePayment) => {
+        try {            
+          const operation = "driver-ride-complete-update";
+          const response: any = await driverRabbitMqClient.produce(data, operation);
+          return (response);
         } catch (e: any) {
           console.log(e);
         }
