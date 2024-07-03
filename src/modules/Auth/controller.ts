@@ -18,7 +18,6 @@ export const isValidated = AsyncHandler(
     try {
       
       const token = req.cookies?.token || req.headers.authorization?.trim().split(" ")[1]; 
-      console.log(token,"ithu access");
       AuthClient.IsAuthenticated({ token }, (err:any, result:any) => {
         if (err) {
           console.log(err);
@@ -45,7 +44,7 @@ export const refreshToken = (
   if (token) {
     AuthClient.RefreshToken({ token }, (err:any, result:any) => {
       if (err) {
-        console.log(err);
+        // console.log(err);
         res.status(StatusCode.NotAcceptable).json({ message: "Invalid refresh token" });
       } else {
         console.log(result,"ithu refresh------");

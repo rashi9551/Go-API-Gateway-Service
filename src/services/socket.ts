@@ -6,6 +6,8 @@ import rideRabbitMqClient from '../modules/ride/rabbitmq/client'
 import driverRabbitMqClient from "../modules/driver/rabbitmq/client";
 import {UserService} from '../modules/user/config/grpc-client/user.client'
 import jwt from 'jsonwebtoken';
+import axios from "axios";
+import { ChatMessage } from "../interfaces/interface";
 
 interface Driver {
     _id: string;
@@ -56,16 +58,34 @@ export const setUpSocketIO = (server: HttpServer): void => {
 
   io.use((socket:AuthenticatedSocket, next) => {
     const token: string | undefined = socket.handshake.query.token as string | undefined;
+    const refreshToken: string | undefined = socket.handshake.query.refreshToken as string | undefined;
     if (!token) {
       return next(new Error('Authentication error'));
     }else{
-      jwt.verify(token, process.env.JWT_SECRET as string, (err:any, decoded:any) => {
+      jwt.verify(token, process.env.JWT_SECRET as string,async (err:any, decoded:any) => {
         if (err) {
-          console.log(err,"ithu socket")
-          return next(new Error('Authentication error'));
+          if(!refreshToken){
+            console.log(err,"ithu socket")
+            return next(new Error('Authentication error'));
           }
+          else{
+   
+            try {
+              const { data } = await axios.post('http://localhost:3000/api/auth/refresh', { token: refreshToken });
+              console.log(data, "jhfhgfjkghfxch-0-=0-0=-=-=0-0-=");
+              socket.emit('tokens-updated', {
+                token: data.token,
+                refreshToken: data.refreshToken,
+              });
+            } catch (error:any) {
+              console.error('Error refreshing token:', error.message);
+              return next(new Error('Authentication error'));
+            }
+          }
+        }
         socket.decoded = decoded 
         next();
+      
       });
       
     } 
@@ -85,7 +105,6 @@ export const setUpSocketIO = (server: HttpServer): void => {
     socket.on("driverLocation", async(latitude: number, longitude: number, driver_id: string) => {
         try {
           console.log("driver location kitty");
-
             driverLatitude=latitude
             driverLongitude=longitude
             const distance=calculateDistance(driverLatitude,driverLongitude,rideDetails.pickupCoordinates.latitude,rideDetails.pickupCoordinates.longitude)
@@ -108,19 +127,23 @@ export const setUpSocketIO = (server: HttpServer): void => {
     );
 
     socket.on("acceptRide",async(acceptedRideData:RideDetails)=>{
-      acceptedRideData.status="Pending";
-      acceptedRideData.pin=generatePIN()
-      
-      acceptedRideData.driverCoordinates = {};
-      acceptedRideData.driverCoordinates.latitude = driverLatitude;
-      acceptedRideData.driverCoordinates.longitude = driverLongitude;
-      
-      console.log(acceptedRideData,"data sended  ");
-      const response = await rideRabbitMqClient.produce(acceptedRideData,"ride-create")
-    //   const responses=await driverRabbitMqClient.produce({driverId:acceptedRideData.driver_id},"updateDriverStatus")
-    //   console.log(responses,"ithu update response");
-      console.log(response,"ithu ride response");
-      io.emit("driverConfirmation",acceptedRideData.ride_id)
+      try {
+        acceptedRideData.status="Pending";
+        acceptedRideData.pin=generatePIN()
+        
+        acceptedRideData.driverCoordinates = {};
+        acceptedRideData.driverCoordinates.latitude = driverLatitude;
+        acceptedRideData.driverCoordinates.longitude = driverLongitude;
+        
+        console.log(acceptedRideData,"data sended  ");
+        const response = await rideRabbitMqClient.produce(acceptedRideData,"ride-create")
+      //   const responses=await driverRabbitMqClient.produce({driverId:acceptedRideData.driver_id},"updateDriverStatus")
+      //   console.log(responses,"ithu update response");
+        console.log(response,"ithu ride response");
+        io.emit("driverConfirmation",acceptedRideData.ride_id)
+      } catch (error) {
+        console.log(error);
+      }
     })
 
     socket.on('forUser',async(ride_id:any)=>{
@@ -131,7 +154,7 @@ export const setUpSocketIO = (server: HttpServer): void => {
       console.log("pin check",pin);
       const response = await rideRabbitMqClient.produce(pin,"ride-confirm")
       if(response){
-        console.log("ride confirmed ------=-=-=-=-==-=-");
+        console.log("ride confirmed ------=-=-=-=-==-=-   ");
           io.emit("rideConfirmed")
       }else{
           io.emit("error in confirming ride")
@@ -142,6 +165,13 @@ export const setUpSocketIO = (server: HttpServer): void => {
       io.emit("userPaymentPage")
     })
 
+    socket.on("paymentCompleted",(paymentMode:string,amount:number)=>{
+      io.emit("driverPaymentSuccess",paymentMode,amount)
+  })
+    socket.on("chat",(chat:ChatMessage[])=>{
+      io.emit("chat",chat)
+  })
+
     socket.on("rideCancelled", async (ride_id)=>{
       try {
         console.log("ride called triggered");  
@@ -150,16 +180,21 @@ export const setUpSocketIO = (server: HttpServer): void => {
         if(rideData){
             // const responses=await driverRabbitMqClient.produce({driverId:rideData.driver_id},"updateDriverStatus")
             // console.log(responses,"ithu update response");
-        }  
-        if(rideData)
-        UserService.rideCancelUpdate({userId:rideData?.user_id},(err:any,result:any)=>{
-            if(err){
-                console.log(err);
-            }else{
+        } else{
+          console.log("No ride data");
+        } 
+        if(rideData){
+          UserService.rideCancelUpdate({userId:rideData?.user_id},(err:any,result:any)=>{
+              if(err){
+                  console.log(err);
+              }else{
                 console.log("ride cancel updated successfuly",result);
-            }
-        })
-          io.emit("rideCancelled")
+                io.emit("rideCancelled")
+              }
+          })
+        }else{
+          console.log("No ride data");
+        } 
       } catch (error) {
           console.log((error as Error).message);
       }

@@ -12,3 +12,8 @@ export interface RidePayment {
     razorpaySignature: string;
     driverId:string
   }
+
+  export interface ChatMessage {
+    message: string;
+    avatar: string;
+  }

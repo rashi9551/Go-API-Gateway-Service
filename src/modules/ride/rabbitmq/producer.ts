@@ -24,8 +24,6 @@ export default class Producer {
         },
       }
     );
-    console.log(uuid,this.replyQueueName,"ithu wue details");
-
 
     return new Promise((res, rej) => {
       this.eventEmitter.once(uuid, async (reply) => {

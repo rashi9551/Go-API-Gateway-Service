@@ -6,6 +6,6 @@ export default {
     },
     queues:{
         dirverQueue:"drivers_queue",
-        rideQueue:'rides_queue'
+        rideQueue:'ride_queue',
     }
 }

@@ -122,12 +122,6 @@ export default class userController{
     }
     getUser=(req:Request,res:Response)=>{
         try {
-            
-        } catch (error) {
-            console.log(error);
-            
-        }
-        try {
             console.log("its coming");
             UserService.GetUser(req.query,(err:any,result:any)=>{
                 if(err){
@@ -143,7 +137,6 @@ export default class userController{
     }
     profileUpdate=(req:Request,res:Response)=>{
         try {
-            
             const {user_id}=req.query
             const id=user_id
             console.log(id);
