@@ -18,6 +18,7 @@ driverRoute.post("/vehicleDetails",upload.fields([{ name: "carImage", maxCount: 
 driverRoute.get("/driverData",isValidated,driverController.getDriverData);
 driverRoute.post("/profileUpdate", isValidated,driverController.profileUpdate);
 driverRoute.get("/updateStatus", isValidated,driverController.updateStatus);
+driverRoute.post("/feedback", isValidated,driverController.feedback);
 
 
 
