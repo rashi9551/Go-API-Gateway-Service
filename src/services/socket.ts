@@ -169,6 +169,7 @@ export const setUpSocketIO = (server: HttpServer): void => {
       io.emit("driverPaymentSuccess",paymentMode,amount)
   })
     socket.on("chat",(chat:ChatMessage[])=>{
+      console.log(chat);
       io.emit("chat",chat)
   })
 
