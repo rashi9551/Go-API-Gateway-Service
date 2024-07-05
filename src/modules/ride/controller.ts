@@ -15,7 +15,7 @@ export default class rideController{
             res.status(StatusCode.Created).json(response)
         } catch (e) {
             console.log(e);
-            return { message: 'Failed to complete ride update' }; 
+            return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
         }
     }
     getAllRides=async(req:Request,res:Response)=>{
@@ -27,9 +27,10 @@ export default class rideController{
             res.status(StatusCode.Created).json(response)
         } catch (e) {
             console.log(e);
-            return { message: 'Failed to complete ride update' }; 
+            return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
         }
     }
+    
     rideCompleteUpdate=async(data:RidePayment):Promise<Message>=>{
         try {
             console.log("rid ecomplete -=======-=-=-=-=-=-=-=-=-=-");
@@ -43,19 +44,38 @@ export default class rideController{
         }
     }
 
-    feedback = (data: feedback): Promise<Message> => {
-        return new Promise<Message>(async (resolve, reject) => {
-            try {
-            console.log("Ride completed"); 
-            const operation = 'update-feedback'; 
-            const response:Message = await rideRabbitMqClient.produce(data, operation) as Message
-            console.log(response);
-            resolve(response); 
-            } catch (e) {
-            console.error(e);
-            reject({ message: 'Failed to complete ride update' }); 
-            }
+    feedback = (data: feedback): Promise<Message> |string => {
+        try {
+            return new Promise<Message>(async (resolve, reject) => {
+                try {
+                const operation = 'update-feedback'; 
+                const response:Message = await rideRabbitMqClient.produce(data, operation) as Message
+                console.log(response);
+                resolve(response); 
+                } catch (e) {
+                console.error(e);
+                reject({ message: 'Failed to complete ride update' }); 
+                }
+            });
+        } catch (error) {
+            console.log(error);
+            return ""
+            
+        }
+    };
+    dashboardData = () => {
+        return new Promise((resolve, reject) => {
+            const operation = 'get-dashboardData';
+            rideRabbitMqClient.produce({}, operation)
+                .then(response => {
+                    console.log(response);
+                    resolve(response);
+                })
+                .catch(error => {
+                    console.error(error);
+                    reject({ message: 'Failed to complete ride update' });
+                });
         });
-};
+    }
 
 }

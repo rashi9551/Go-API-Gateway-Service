@@ -36,6 +36,8 @@ export default class userController{
             
         } catch (error) {
             console.log(error);
+            return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
             
         }
     }
@@ -59,7 +61,8 @@ export default class userController{
             
         } catch (error) {
             console.log(error);
-            
+            return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }   
     }
     resendOtp=(req:Request,res:Response)=>{
@@ -82,7 +85,8 @@ export default class userController{
             
         } catch (error) {
             console.log(error);
-            
+            return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
     }
     checkGoogleLoginUser=(req:Request,res:Response)=>{
@@ -100,7 +104,8 @@ export default class userController{
             
         } catch (error) {
             console.log(error);
-            
+            return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
     }
     checkLoginUser=(req:Request,res:Response)=>{
@@ -117,7 +122,8 @@ export default class userController{
             
         } catch (error) {
             console.log(error);
-            
+            return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
     }
     getUser=(req:Request,res:Response)=>{
@@ -133,6 +139,8 @@ export default class userController{
             })
         } catch (error) {
             console.log(error);
+            return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
     }
     profileUpdate=(req:Request,res:Response)=>{
@@ -150,6 +158,8 @@ export default class userController{
             })
         } catch (error) {
             console.log(error);
+            return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
     }
     addWalletBalance=async(req:Request,res:Response)=>{
@@ -176,6 +186,8 @@ export default class userController{
             }
         } catch (error) {
             console.log(error);
+            return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
     }
     stripePayment=async(req:Request,res:Response)=>{
@@ -214,8 +226,8 @@ export default class userController{
             
           } catch (error) {
             console.log(error);
-            return { error: (error as Error).message };
-          }
+            return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+        }
     }
     RidePayment=async(req:Request,res:Response)=>{
         try {
@@ -260,6 +272,8 @@ export default class userController{
             }
         } catch (error) {
             console.log(error);
+            return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
     }
     razorpayPayment = async (req: Request, res: Response) => {

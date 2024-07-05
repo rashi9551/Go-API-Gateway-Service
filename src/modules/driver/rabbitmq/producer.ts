@@ -11,6 +11,8 @@ export default class Producer {
   ) {}
 
   async produceMessage(data: any, operation: any) {
+    console.log(this.replyQueueName,"replyy driver [-=-=-=-=-=-=-]");
+    
     const uuid = randomUUID();
     this.channel.sendToQueue(
       rabbitmqConfig.queues.dirverQueue,

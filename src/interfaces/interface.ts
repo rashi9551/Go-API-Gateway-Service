@@ -17,7 +17,16 @@ export interface RidePayment {
     message: string;
     avatar: string;
   }
-
+   interface UserStat {
+    userCount: number;
+    month: number;
+  }
+  
+  export interface DashboardData {
+    stats: UserStat[];
+    totalUsers: number;
+    blockedUsers: number;
+  }
 
   export interface feedback{
     _id:string,

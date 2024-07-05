@@ -86,7 +86,17 @@ export default class driverControl{
           return (response);
         } catch (e: any) {
           console.log(e);
-          
+
+        }
+    }
+    dashboardData=async() => {
+        try {            
+          const operation = "admin-get-dashboarData";
+          const response: any = await driverRabbitMqClient.produce({}, operation);
+          return (response);
+        } catch (e: any) {
+          console.log(e);
+
         }
     }
     

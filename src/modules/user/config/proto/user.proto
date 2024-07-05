@@ -18,6 +18,7 @@ service User {
     rpc AdminGetUserData(AdminGetUserDataRequest) returns (AdminGetUserDataResponse) {}
     rpc AdminGetBlockedData(Empty) returns (AdminGetBlockedDataResponse) {}
     rpc AdminUpdateUserStatus(AdminUpdateUserStatusRequest) returns (AdminUpdateUserStatusResponse) {}
+    rpc AdminDashboardData(AdminDashboardDataRequest) returns (AdminDashboardDataResponse) {}
 }
 
 message RegisterRequest {
@@ -234,4 +235,19 @@ message AdminGetUserDataResponse{
     string userImage = 4;
     string referral_code = 5;
     string account_status = 6;
+}
+message AdminDashboardDataRequest{
+    
+}
+
+message AdminDashboardDataResponse{
+    repeated UserStat stats = 1;
+    int32 totalUsers=2;
+    int32 blockedUsers=3;
+}
+
+
+message UserStat {
+    int32 userCount = 1;
+    int32 month = 2;
 }

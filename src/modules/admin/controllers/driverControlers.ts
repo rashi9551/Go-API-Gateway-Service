@@ -14,6 +14,8 @@ export default class driverAdminController{
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
       }
       verifiedDrivers=async(req: Request,
@@ -27,6 +29,8 @@ export default class driverAdminController{
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
       }
       blockedDrivers=async(req: Request,
@@ -40,6 +44,8 @@ export default class driverAdminController{
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
       }
       driverData=async(req: Request,
@@ -49,10 +55,11 @@ export default class driverAdminController{
         try {
           const operation = "admin-get-driver-data";
           const response: any = await adminRabbitMqClient.produce(req.query, operation);
-    
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
       }
       verifyDriver=async(req: Request,
@@ -66,6 +73,8 @@ export default class driverAdminController{
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
       }
       rejectDriver=async(req: Request,
@@ -79,6 +88,8 @@ export default class driverAdminController{
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
       }
       updateDriverStatus=async(req: Request,
@@ -92,6 +103,8 @@ export default class driverAdminController{
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
       }
 }

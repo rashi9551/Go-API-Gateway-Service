@@ -18,6 +18,8 @@ export default class driverAuthController{
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
       }
     checkGoogleLoginDriver=async(req: Request,
@@ -34,6 +36,8 @@ export default class driverAuthController{
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
       }
 
@@ -48,6 +52,8 @@ export default class driverAuthController{
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
       }
       checkDriver=async(req: Request,
@@ -61,6 +67,8 @@ export default class driverAuthController{
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
       }
       location=async(req: Request,
@@ -74,6 +82,8 @@ export default class driverAuthController{
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
       }
 
@@ -100,6 +110,8 @@ export default class driverAuthController{
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
       }
       updateDriverImage=async(req: Request,
@@ -119,6 +131,8 @@ export default class driverAuthController{
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
       }
 
@@ -144,6 +158,8 @@ export default class driverAuthController{
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
         }
       }
 

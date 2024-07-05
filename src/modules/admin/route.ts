@@ -15,6 +15,7 @@ adminRoute.get('/getUserData',isValidated,userController.getData)
 adminRoute.get('/userData',isValidated,userController.userData)
 adminRoute.get('/blockedUserData',isValidated,userController.getBlockedData)
 adminRoute.post('/updateUserStatus',isValidated,userController.updateUserStatus)
+adminRoute.get('/getDashboardData',isValidated,userController.dashboardData)
 
 
 adminRoute.get('/pendingDrivers',isValidated,driverController.pendingDrivers)
@@ -24,6 +25,7 @@ adminRoute.get('/driverData',isValidated,driverController.driverData)
 adminRoute.post('/verifyDriver',isValidated,driverController.verifyDriver)
 adminRoute.post('/rejectDriver',isValidated,driverController.rejectDriver)
 adminRoute.post('/updateDriverStatus',isValidated,driverController.updateDriverStatus)
+
 
 
 
