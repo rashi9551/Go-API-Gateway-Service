@@ -1,7 +1,7 @@
 import { Request,Response } from "express"
 import rideRabbitMqClient from './rabbitmq/client'
 import { StatusCode } from "../../interfaces/enum"
-import { Message, RidePayment, feedback} from "../../interfaces/interface";
+import { Message, RideInterface, RidePayment, feedback} from "../../interfaces/interface";
 import { RideDetails } from "../../interfaces/mongo";
 
 
@@ -10,8 +10,8 @@ export default class rideController{
         try {
             console.log("get current id -=======-=-=-=-=-=-=-=-=-=-");
             const operation ='get-current-ride'
-            const response = await rideRabbitMqClient.produce({...req.query},operation)
-            console.log(response);
+            const response:RideInterface = await rideRabbitMqClient.produce({...req.query},operation) as RideInterface
+            console.log("get current id",response);
             res.status(StatusCode.Created).json(response)
         } catch (e) {
             console.log(e);
@@ -22,7 +22,7 @@ export default class rideController{
         try {
             console.log("get all ride id==========",req.query);
             const operation ='get-all-ride'
-            const response = await rideRabbitMqClient.produce({...req.query},operation)
+            const response:RideInterface = await rideRabbitMqClient.produce({...req.query},operation) as RideInterface
             console.log(response);
             res.status(StatusCode.Created).json(response)
         } catch (e) {
@@ -67,6 +67,20 @@ export default class rideController{
         return new Promise((resolve, reject) => {
             const operation = 'get-dashboardData';
             rideRabbitMqClient.produce({}, operation)
+                .then(response => {
+                    console.log(response);
+                    resolve(response);
+                })
+                .catch(error => {
+                    console.error(error);
+                    reject({ message: 'Failed to complete ride update' });
+                });
+        });
+    }
+    driverDashboardData = (data:{driver_id:string}) => {
+        return new Promise((resolve, reject) => {
+            const operation = 'driver-get-dashboardData';
+            rideRabbitMqClient.produce(data, operation)
                 .then(response => {
                     console.log(response);
                     resolve(response);

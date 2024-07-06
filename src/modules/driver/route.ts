@@ -19,6 +19,7 @@ driverRoute.get("/driverData",isValidated,driverController.getDriverData);
 driverRoute.post("/profileUpdate", isValidated,driverController.profileUpdate);
 driverRoute.get("/updateStatus", isValidated,driverController.updateStatus);
 driverRoute.post("/feedback", isValidated,driverController.feedback);
+driverRoute.get("/dashboardData", isValidated,driverController.driverDashboardData);
 
 
 

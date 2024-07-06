@@ -4,8 +4,9 @@ import { StatusCode } from '../../../interfaces/enum'
 import rideController from '../../ride/controller';
 import driverController from '../../driver/controllers/driverController';
 import userController from '../../user/controller';
-import { DashboardData } from '../../../interfaces/interface';
+import { AdminLogin, DashboardData, Message, RideInfo, UserInterface } from '../../../interfaces/interface';
 import { monthNames } from '../../../utils/generatePIN';
+import { Admin } from 'mongodb';
 
 const rideControll=new rideController()
 const driverControll=new driverController()
@@ -15,7 +16,7 @@ export default class userAdminController{
     login=(req:Request,res:Response)=>{
         try {
             console.log(req.body,"dhgfavjhsd");
-            UserService.AdminLogin(req.body,(err:any,result:any)=>{
+            UserService.AdminLogin(req.body,(err:any,result:AdminLogin)=>{
                 if(err){
                     res.status(StatusCode.BadRequest).json({message:err})
                 }else{
@@ -23,16 +24,14 @@ export default class userAdminController{
                     res.status(StatusCode.Created).json(result)
                 }
             })
-            
         } catch (error) {
             console.log(error);
             return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
-
         }
     }
     getData=(req:Request,res:Response)=>{
         try {
-            UserService.AdminGetData({},(err:any,result:any)=>{
+            UserService.AdminGetData({},(err:any,result:{User:UserInterface})=>{
                 if(err){
                     res.status(StatusCode.BadRequest).json({message:err})
                 }else{
@@ -40,16 +39,14 @@ export default class userAdminController{
                     res.status(StatusCode.Created).json(result.User)
                 }
             })
-            
         } catch (error) {
             console.log(error);
             return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
-
         }
     }
     userData=(req:Request,res:Response)=>{
         try {
-            UserService.AdminGetUserData(req.query,(err:any,result:any)=>{
+            UserService.AdminGetUserData(req.query,(err:any,result:UserInterface)=>{
                 if(err){
                     res.status(StatusCode.BadRequest).json({message:err})
                 }else{
@@ -57,7 +54,6 @@ export default class userAdminController{
                     res.status(StatusCode.Created).json(result)
                 }
             })
-            
         } catch (error) {
             console.log(error);
             return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
@@ -66,7 +62,7 @@ export default class userAdminController{
     }
     getBlockedData=(req:Request,res:Response)=>{
         try {
-            UserService.AdminGetBlockedData({},(err:any,result:any)=>{
+            UserService.AdminGetBlockedData({},(err:any,result:{User:UserInterface})=>{
                 if(err){
                     console.log(err);
                     res.status(StatusCode.BadRequest).json({message:err})
@@ -75,7 +71,6 @@ export default class userAdminController{
                     res.status(StatusCode.Created).json(result.User)
                 }
             })
-            
         } catch (error) {
             console.log(error);
             return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
@@ -86,7 +81,7 @@ export default class userAdminController{
         try {
             const {id}=req.query
             console.log(id,req.query,req.params);
-            UserService.AdminUpdateUserStatus({id,...req.body},(err:any,result:any)=>{
+            UserService.AdminUpdateUserStatus({id,...req.body},(err:any,result:Message)=>{
                 if(err){
                     console.log(err);
                     res.status(StatusCode.BadRequest).json({message:err})
@@ -95,7 +90,6 @@ export default class userAdminController{
                     res.status(StatusCode.Created).json(result)
                 }
             })
-            
         } catch (error) {
             console.log(error);
             return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
@@ -111,9 +105,8 @@ export default class userAdminController{
                     res.status(StatusCode.BadRequest).json({message:err})
                 }else{
                     const userData=result.stats
-                    const pieChartData=await rideControll.dashboardData()
-                    const driver=await driverControll.dashboardData()
-                    // console.log("result ",result,pieChartData,userData,driver);
+                    const ride=await rideControll.dashboardData() as RideInfo
+                    const driver=await driverControll.dashboardData()                    
                     const driverData=driver.response
                     const chardData = userData.map((userItem:{userCount:number,month:number}, index:number) => ({
                         name: monthNames[userItem.month - 1],
@@ -125,14 +118,12 @@ export default class userAdminController{
                     const totalDrivers =driver.totalDrivers
                     const blockedDrivers = driver.blockedDrivers
                     const newDrivers = driver.pendingDrivers
-                    res.status(StatusCode.Created).json({ chardData, pieChartData, dashboardData:{totalUsers,totalDrivers,blockedUsers,blockedDrivers,newDrivers} })
+                    res.status(StatusCode.Created).json({ chardData, pieChartData:ride.rideData, dashboardData:{totalUsers,totalDrivers,totalRides:ride.totalRides,blockedUsers,blockedDrivers,newDrivers} })
                 }
             })
-            
         } catch (error) {
             console.log(error);
             return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
-
         }
     }
     

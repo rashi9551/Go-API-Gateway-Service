@@ -1,6 +1,8 @@
 import { Request,Response,NextFunction } from "express"
 import adminRabbitMqClient from "../../driver/rabbitmq/client"
 import { StatusCode } from '../../../interfaces/enum'
+import { DriverInterface } from "../../../interfaces/mongo";
+import { Message } from "../../../interfaces/interface";
 
 export default class driverAdminController{
     pendingDrivers=async(req: Request,
@@ -9,10 +11,9 @@ export default class driverAdminController{
       ) => {
         try {
           const operation = "admin-pending-drivers";
-          const response: any = await adminRabbitMqClient.produce(null, operation);
-    
+          const response: DriverInterface = await adminRabbitMqClient.produce(null, operation)as DriverInterface
           res.status(StatusCode.Created).json(response);
-        } catch (e: any) {
+        } catch (e:any) {
           console.log(e);
           return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
 
@@ -24,13 +25,11 @@ export default class driverAdminController{
       ) => {
         try {
           const operation = "admin-verified-drivers";
-          const response: any = await adminRabbitMqClient.produce(null, operation);
-    
+          const response: DriverInterface = await adminRabbitMqClient.produce(null, operation)as DriverInterface
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
           return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
-
         }
       }
       blockedDrivers=async(req: Request,
@@ -39,8 +38,7 @@ export default class driverAdminController{
       ) => {
         try {
           const operation = "admin-blocked-drivers";
-          const response: any = await adminRabbitMqClient.produce(null, operation);
-    
+          const response: DriverInterface = await adminRabbitMqClient.produce(null, operation)as DriverInterface
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
@@ -54,7 +52,7 @@ export default class driverAdminController{
       ) => {
         try {
           const operation = "admin-get-driver-data";
-          const response: any = await adminRabbitMqClient.produce(req.query, operation);
+          const response: DriverInterface = await adminRabbitMqClient.produce(req.query, operation)as DriverInterface
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
@@ -68,8 +66,7 @@ export default class driverAdminController{
       ) => {
         try {
           const operation = "admin-verify-driver";
-          const response: any = await adminRabbitMqClient.produce(req.query, operation);
-    
+          const response: Message = await adminRabbitMqClient.produce(req.query, operation)as Message
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
@@ -83,8 +80,7 @@ export default class driverAdminController{
       ) => {
         try {
           const operation = "admin-reject-driver";
-          const response: any = await adminRabbitMqClient.produce({...req.query,...req.body}, operation);
-    
+          const response: Message = await adminRabbitMqClient.produce({...req.query,...req.body}, operation)as Message
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
@@ -98,13 +94,11 @@ export default class driverAdminController{
       ) => {
         try {    
           const operation = "admin-update-status-driver";
-          const response: any = await adminRabbitMqClient.produce({...req.query,...req.body}, operation);
-    
+          const response: Message = await adminRabbitMqClient.produce({...req.query,...req.body}, operation)as Message
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
           return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
-
         }
       }
 }

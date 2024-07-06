@@ -7,44 +7,14 @@ import driverRabbitMqClient from "../modules/driver/rabbitmq/client";
 import {UserService} from '../modules/user/config/grpc-client/user.client'
 import jwt from 'jsonwebtoken';
 import axios from "axios";
-import { ChatMessage } from "../interfaces/interface";
-
-interface Driver {
-    _id: string;
-}
-
-interface DecodedToken {
-  clientId: string;
-}
-
-interface AuthenticatedSocket extends Socket {
-  decoded?: DecodedToken;
-}
+import { AuthenticatedSocket, ChatMessage, Driver } from "../interfaces/interface";
+import { calculateDistance } from "../utils/distanceCalculation";
 
 
-const calculateDistance=(driverLatitude:number,driverLongitude:number,userLatitude:number,userLongitude:number)=>{
-    const deg2rad = (deg: any) => deg * (Math.PI / 180);
-    driverLatitude = deg2rad(driverLatitude);
-    driverLongitude = deg2rad(driverLongitude);
-    userLatitude = deg2rad(userLatitude);
-    userLongitude = deg2rad(userLongitude);
 
-    const radius = 6371;
-
-    const dlat = userLatitude - driverLatitude;
-    const dlon = userLongitude - driverLongitude;
-
-    const a = Math.sin(dlat / 2) ** 2 + Math.cos(driverLatitude) * Math.cos(driverLongitude) * Math.sin(dlon / 2) ** 2;
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-    const distance = radius * c;
-
-    return distance;
-}
 
 
 export const setUpSocketIO = (server: HttpServer): void => {
-  
   let driverLatitude: number;
   let driverLongitude: number;
   let rideDetails: RideDetails;
@@ -69,10 +39,8 @@ export const setUpSocketIO = (server: HttpServer): void => {
             return next(new Error('Authentication error'));
           }
           else{
-   
             try {
               const { data } = await axios.post('http://localhost:3000/api/auth/refresh', { token: refreshToken });
-              console.log(data, "jhfhgfjkghfxch-0-=0-0=-=-=0-0-=");
               socket.emit('tokens-updated', {
                 token: data.token,
                 refreshToken: data.refreshToken,
@@ -136,10 +104,10 @@ export const setUpSocketIO = (server: HttpServer): void => {
         acceptedRideData.driverCoordinates.longitude = driverLongitude;
         
         console.log(acceptedRideData,"data sended  ");
-        const response = await rideRabbitMqClient.produce(acceptedRideData,"ride-create")
-      //   const responses=await driverRabbitMqClient.produce({driverId:acceptedRideData.driver_id},"updateDriverStatus")
-      //   console.log(responses,"ithu update response");
-        console.log(response,"ithu ride response");
+        await Promise.all([
+          rideRabbitMqClient.produce(acceptedRideData, "ride-create"),
+          driverRabbitMqClient.produce({ driverId: acceptedRideData.driver_id }, "updateDriverStatus")
+        ]);
         io.emit("driverConfirmation",acceptedRideData.ride_id)
       } catch (error) {
         console.log(error);
@@ -155,7 +123,7 @@ export const setUpSocketIO = (server: HttpServer): void => {
       const response = await rideRabbitMqClient.produce(pin,"ride-confirm")
       if(response){
         console.log("ride confirmed ------=-=-=-=-==-=-   ");
-          io.emit("rideConfirmed")
+        io.emit("rideConfirmed")
       }else{
           io.emit("error in confirming ride")
       }
@@ -167,20 +135,19 @@ export const setUpSocketIO = (server: HttpServer): void => {
 
     socket.on("paymentCompleted",(paymentMode:string,amount:number)=>{
       io.emit("driverPaymentSuccess",paymentMode,amount)
-  })
+    })
+
     socket.on("chat",(chat:ChatMessage[])=>{
       console.log(chat);
       io.emit("chat",chat)
-  })
+    })
 
     socket.on("rideCancelled", async (ride_id)=>{
       try {
         console.log("ride called triggered");  
         const rideData = await rideRabbitMqClient.produce({ride_id},"update-ride-status") as RideDetails
-        console.log(rideData,"ride data updated");
         if(rideData){
-            // const responses=await driverRabbitMqClient.produce({driverId:rideData.driver_id},"updateDriverStatus")
-            // console.log(responses,"ithu update response");
+            const responses=await driverRabbitMqClient.produce({driverId:rideData.driver_id},"ride-cancelled")
         } else{
           console.log("No ride data");
         } 

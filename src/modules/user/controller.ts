@@ -5,7 +5,7 @@ import uploadToS3 from '../../services/s3'
 import Stripe from "stripe";
 import rideControl from '../ride/controller';
 import driverControl from '../driver/controllers/driverController';
-import { Message, RidePayment } from '../../interfaces/interface';
+import { AuthResponse, Message, RidePayment, UserInterface } from '../../interfaces/interface';
 
 const rideController=new rideControl()
 const driverController=new driverControl()
@@ -15,16 +15,15 @@ export default class userController{
     register=async(req:Request,res:Response)=>{
         try {
             const files:Express.Multer.File | undefined =req.file
-              let userImage=""
-              if(files){
-                userImage=await uploadToS3(files)
-                console.log(userImage);
-              }
+            let userImage=""
+            if(files){
+            userImage=await uploadToS3(files)
+            }
             const token = req.cookies.otp
             UserService.Register({ ...req.body,
                 userImage,
                 token,
-                },(err:any,result:any)=>{
+                },(err:any,result:Message)=>{
                 if(err){
                     console.log(err);
                     res.status(StatusCode.BadRequest).json({message:err})
@@ -33,17 +32,15 @@ export default class userController{
                     res.status(StatusCode.Created).json(result)
                 }
             })
-            
         } catch (error) {
             console.log(error);
-            return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
-
-            
+            return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' }); 
         }
     }
+
     checkUser=(req:Request,res:Response)=>{    
         try {
-            UserService.CheckUser(req.body,(err:any,result:any)=>{
+            UserService.CheckUser(req.body,(err:any,result:{token:string,message:string})=>{
                 if(err){
                     console.log(err);
                     res.status(StatusCode.BadRequest).json({message:err})
@@ -58,17 +55,16 @@ export default class userController{
                     res.status(StatusCode.Created).json(result)
                 }
             })
-            
         } catch (error) {
             console.log(error);
             return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
-
         }   
     }
+
     resendOtp=(req:Request,res:Response)=>{
         try {
             console.log(req.body);
-            UserService.ResendOtp(req.body,(err:any,result:any)=>{
+            UserService.ResendOtp(req.body,(err:any,result:{token:string,message:string})=>{
                 if(err){
                     res.status(StatusCode.BadRequest).json({message:err})
                 }else{
@@ -86,13 +82,13 @@ export default class userController{
         } catch (error) {
             console.log(error);
             return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
-
         }
     }
+
     checkGoogleLoginUser=(req:Request,res:Response)=>{
         try {
             console.log(req.body);
-            UserService.CheckGoogleLoginUser(req.body,(err:any,result:any)=>{
+            UserService.CheckGoogleLoginUser(req.body,(err:any,result:AuthResponse)=>{
                 if(err){
                     console.log(err);
                     res.status(StatusCode.BadRequest).json({message:err})
@@ -101,7 +97,6 @@ export default class userController{
                     res.status(StatusCode.Created).json(result)
                 }
             })
-            
         } catch (error) {
             console.log(error);
             return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
@@ -111,7 +106,7 @@ export default class userController{
     checkLoginUser=(req:Request,res:Response)=>{
         try {
             console.log(req.body);
-            UserService.CheckLoginUser(req.body,(err:any,result:any)=>{
+            UserService.CheckLoginUser(req.body,(err:any,result:AuthResponse)=>{
                 if(err){
                     res.status(StatusCode.BadRequest).json({message:err})
                 }else{
@@ -119,17 +114,16 @@ export default class userController{
                     res.status(StatusCode.Created).json(result)
                 }
             })
-            
         } catch (error) {
             console.log(error);
             return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
-
         }
     }
+
     getUser=(req:Request,res:Response)=>{
         try {
             console.log("its coming");
-            UserService.GetUser(req.query,(err:any,result:any)=>{
+            UserService.GetUser(req.query,(err:any,result:{newData:UserInterface})=>{
                 if(err){
                     res.status(StatusCode.BadRequest).json({message:err})
                 }else{
@@ -140,15 +134,15 @@ export default class userController{
         } catch (error) {
             console.log(error);
             return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
-
         }
     }
+
     profileUpdate=(req:Request,res:Response)=>{
         try {
             const {user_id}=req.query
             const id=user_id
             console.log(id);
-            UserService.ProfileUpdate({id,...req.body},(err:any,result:any)=>{
+            UserService.ProfileUpdate({id,...req.body},(err:any,result:{newData:UserInterface})=>{
                 if(err){
                     res.status(StatusCode.BadRequest).json({message:err})
                 }else{
@@ -187,7 +181,6 @@ export default class userController{
         } catch (error) {
             console.log(error);
             return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
-
         }
     }
     stripePayment=async(req:Request,res:Response)=>{
@@ -198,8 +191,6 @@ export default class userController{
             const stripe = new Stripe(process?.env.STRIPE_SECRET_KEY as string, {
               apiVersion: "2024-06-20",
           });
-          
-      
           const session = await stripe.checkout.sessions.create({
               payment_method_types: ["card"],
               line_items: [
@@ -218,12 +209,9 @@ export default class userController{
               success_url: `${success_url}`,
               cancel_url: "http://localhost:5173/account",
           });
-          
-          
             if(session){
                 res.status(StatusCode.Created).json({id:session.id})
             }
-            
           } catch (error) {
             console.log(error);
             return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
@@ -242,20 +230,19 @@ export default class userController{
                     }
                     });
             });
-
             const data:RidePayment = { ...req.body, ...req.query };
             const result: Message = await razorpayPaymentPromise(data);
         
             if (result.message === 'Success') {
                 console.log(result.message,"user side");
                 
-            const rideResponse:Message = await rideController.rideCompleteUpdate(data);
+            const rideResponse:Message = await rideController.rideCompleteUpdate(data) as Message
         
             if (rideResponse.message === 'Success') {
 
                 console.log(rideResponse.message,"ride side");
 
-                const driverResponse:Message = await driverController.rideCompleteUpdate(data);
+                const driverResponse:Message = await driverController.rideCompleteUpdate(data) as Message
                 
                 if (driverResponse.message === 'Success') {
                     console.log(driverResponse.message,"driverResponse side");
@@ -273,13 +260,12 @@ export default class userController{
         } catch (error) {
             console.log(error);
             return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
-
         }
     }
     razorpayPayment = async (req: Request, res: Response) => {
         try {
             console.log(req.body, req.query, "=-=-=----=-=-=-=-=-=-=--=-=-=-");
-            UserService.razorpayPayment({...req.body, ...req.query},(err:any,result:any)=>{
+            UserService.razorpayPayment({...req.body, ...req.query},(err:any,result:RidePayment)=>{
                 if(err){
                     res.status(StatusCode.BadRequest).json({message:err})
                 }else{
@@ -287,11 +273,9 @@ export default class userController{
                     res.status(StatusCode.Created).json(result)
                 }
             })
-        
         } catch (error) {
             console.log(error);
             return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
-    }
-    };
-      
+        }
+    };  
 }
