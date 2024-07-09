@@ -1,4 +1,5 @@
 import { Socket } from "socket.io";
+import { StatusCode } from "./enum";
 
 export interface Message {
     message: string ;

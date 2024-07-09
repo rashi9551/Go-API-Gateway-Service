@@ -70,6 +70,9 @@ export enum StatusCode {
     LoopDetected = 508,
     NotExtended = 510,
     NetworkAuthenticationRequired = 511,
+
+    payment_status='paid'
+
   }
   
 

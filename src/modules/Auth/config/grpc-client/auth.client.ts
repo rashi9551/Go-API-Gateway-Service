@@ -10,7 +10,7 @@ const packageDef = protoLoader.loadSync(path.resolve(__dirname, '../proto/auth.p
 const grpcObject = (grpc.loadPackageDefinition(packageDef) as unknown) as any
 
 const AuthClient = new grpcObject.authpackage.Auth(
-    `localhost:${process.env.AUTH_GRPC_PORT}`, grpc.credentials.createInsecure()
+    `${process.env.DOMAIN}${process.env.AUTH_GRPC_PORT}`, grpc.credentials.createInsecure()
 )
 
 export{AuthClient}

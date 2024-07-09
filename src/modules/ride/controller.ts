@@ -40,7 +40,7 @@ export default class rideController{
             return(response)
         } catch (e) {
             console.log(e);
-            return { message: 'Failed to complete ride update' }; 
+            return {message: 'Failed to complete ride update' }; 
         }
     }
 
@@ -90,6 +90,18 @@ export default class rideController{
                     reject({ message: 'Failed to complete ride update' });
                 });
         });
+    }
+    getCurrentRideCheck=async(data:{rideId:string}):Promise<RideInterface|Message>=>{
+        try {
+            console.log("get current id -=======-=-=-=-=-=-=-=-=-=-");
+            const operation ='get-current-ride'
+            const response:RideInterface = await rideRabbitMqClient.produce(data,operation) as RideInterface
+            console.log("get current id",response);
+            return (response)
+        } catch (e) {
+            console.log(e);
+            return ({ message: 'Internal Server Error' });
+        }
     }
 
 }

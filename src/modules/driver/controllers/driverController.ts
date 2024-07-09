@@ -93,6 +93,19 @@ export default class driverControl{
 
         }
     }
+    redeemWallet=async(req: Request,
+      res: Response,
+      next: NextFunction
+    )  => {
+        try {            
+          const operation = "redeem-driver-wallet-razorpay";
+          const response: any = await driverRabbitMqClient.produce({...req.body,...req.query}, operation);
+          res.status(StatusCode.Created).json(response);
+        } catch (e: any) {
+          console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+        }
+    }
     driverDashboardData=async(req: Request,
       res: Response,
       next: NextFunction

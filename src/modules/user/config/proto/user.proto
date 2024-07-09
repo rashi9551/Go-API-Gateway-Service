@@ -132,6 +132,7 @@ message RidePaymentRequest {
 
 message RidePaymentResponse{
     string message = 1;
+    int32 StatusCode=2;
 }
 message razorpayPaymentRequest {
     int32 amount = 1;

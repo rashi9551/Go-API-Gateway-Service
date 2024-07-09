@@ -40,7 +40,7 @@ export const setUpSocketIO = (server: HttpServer): void => {
           }
           else{
             try {
-              const { data } = await axios.post('http://localhost:3000/api/auth/refresh', { token: refreshToken });
+              const { data } = await axios.post(`${process.env.AUTH_REFRESH_URL}`, { token: refreshToken });
               socket.emit('tokens-updated', {
                 token: data.token,
                 refreshToken: data.refreshToken,
