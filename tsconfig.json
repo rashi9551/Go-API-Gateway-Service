@@ -6,7 +6,7 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "outDir": "./dist",
+    "outDir": "./dist"
     // Add other options as needed
   },
   "include": [
