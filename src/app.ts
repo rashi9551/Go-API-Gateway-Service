@@ -13,9 +13,7 @@ import driverRoute from './modules/driver/route'
 import rideRoute from './modules/ride/route'
 import authRoute from './modules/auth/route'
 import { setUpSocketIO } from "./services/socket";
-import rateLimit from 'express-rate-limit'
 import { limiter } from './utils/rateLimitter'
-import axios from 'axios'
 
 class App{
     public app:Application;
@@ -54,7 +52,7 @@ class App{
 
     public startServer(port:number):void{
         this.server.listen(port,()=>{
-            console.log(`API-Gateway started on with the help of kubernetes ${port}`);
+            console.log(`API-Gateway started on with the help of kubernet ${port}`);
             
         })
     }
