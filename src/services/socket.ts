@@ -15,7 +15,7 @@ import { AuthClient } from "../modules/auth/config/grpc-client/auth.client";
 
 
 export const setUpSocketIO = (server: HttpServer): void => {
-  let driverLatitude: number;
+  let driverLatitude: number; 
   let driverLongitude: number;
   let rideDetails: RideDetails;
   const io: SocketIOServer = new SocketIOServer(server, {
