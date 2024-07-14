@@ -25,7 +25,7 @@ jobs:
         run: |
           docker buildx create --use
           docker buildx inspect --bootstrap
-          docker buildx build --platform linux/amd64,linux/arm64 -t muhammedrashi/api-gateway:latest --push .
+          docker buildx build --platform linux/amd64,linux/arm64 -t muhammedrashi/api-gateway:latest --push --no-cache .
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

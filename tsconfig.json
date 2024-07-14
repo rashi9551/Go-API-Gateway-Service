@@ -7,7 +7,6 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "outDir": "./dist"
-    // Add other options as needed
   },
   "include": [
     "src"
