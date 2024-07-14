@@ -2,7 +2,7 @@ import express,{Application} from 'express'
 import userAdminController from './controllers/userController'
 import driverAdminController from './controllers/driverControlers'
 import upload from '../../middleware/multer'
-import { isValidated } from '../auth/controller'
+import { isValidated } from '../Auth/controller'
 
 const adminRoute:Application=express()
 

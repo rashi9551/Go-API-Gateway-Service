@@ -8,7 +8,7 @@ import {UserService} from '../modules/user/config/grpc-client/user.client'
 import jwt from 'jsonwebtoken';
 import { AuthenticatedSocket, AuthResponse, ChatMessage, Driver, Tokens } from "../interfaces/interface";
 import { calculateDistance } from "../utils/distanceCalculation";
-import { AuthClient } from "../modules/auth/config/grpc-client/auth.client";
+import { AuthClient } from "../modules/Auth/config/grpc-client/auth.client";
 
 
 

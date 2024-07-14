@@ -1,7 +1,7 @@
 import express,{Application} from 'express'
 import userController from './controller'
 import upload from '../../middleware/multer'
-import { isValidated } from '../auth/controller'
+import { isValidated } from '../Auth/controller'
 
 const userRoute:Application=express()
 

@@ -11,7 +11,7 @@ import 'dotenv/config';
 import adminRoute from './modules/admin/route'
 import driverRoute from './modules/driver/route'
 import rideRoute from './modules/ride/route'
-import authRoute from './modules/auth/route'
+import authRoute from './modules/Auth/route'
 import { setUpSocketIO } from "./services/socket";
 import { limiter } from './utils/rateLimitter'
 
