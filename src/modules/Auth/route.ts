@@ -1,5 +1,5 @@
 import express,{Application} from 'express'
-import { refreshToken } from '../auth/controller'
+import { refreshToken } from './controller'
 
 const rideRoute:Application=express()
 
