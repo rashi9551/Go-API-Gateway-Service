@@ -54,7 +54,7 @@ class App{
 
     public startServer(port:number):void{
         this.server.listen(port,()=>{
-            console.log(`API-Gateway started on ${port}`);
+            console.log(`API-Gateway started on with the help of kubernetes ${port}`);
             
         })
     }
