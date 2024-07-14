@@ -53,3 +53,23 @@ export const refreshToken = (
     console.log(error);
   }
 };
+export const refreshTokenForSoket = (data:{refreshToken:string}):any=> {
+  try {
+    const token = data.refreshToken
+    if (token) {
+      AuthClient.RefreshToken({ token }, (err:any, result:Tokens) => {
+        if (err) {
+          console.log(err);
+          return({ message: "Invalid refresh token" });
+        } else {
+          console.log(result,"i thu kondoooy------  ");
+          return({ success: true,token:result?.accessToken ,refreshToken:result?.refreshToken ,message: "new token generated successfully" });
+        }
+      });
+    } else {
+      return({message: "Token is missing"});
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};

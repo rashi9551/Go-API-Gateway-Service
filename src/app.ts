@@ -15,6 +15,7 @@ import authRoute from './modules/auth/route'
 import { setUpSocketIO } from "./services/socket";
 import rateLimit from 'express-rate-limit'
 import { limiter } from './utils/rateLimitter'
+import axios from 'axios'
 
 class App{
     public app:Application;

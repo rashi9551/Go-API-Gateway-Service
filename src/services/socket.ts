@@ -6,9 +6,9 @@ import rideRabbitMqClient from '../modules/ride/rabbitmq/client'
 import driverRabbitMqClient from "../modules/driver/rabbitmq/client";
 import {UserService} from '../modules/user/config/grpc-client/user.client'
 import jwt from 'jsonwebtoken';
-import axios from "axios";
-import { AuthenticatedSocket, ChatMessage, Driver } from "../interfaces/interface";
+import { AuthenticatedSocket, AuthResponse, ChatMessage, Driver, Tokens } from "../interfaces/interface";
 import { calculateDistance } from "../utils/distanceCalculation";
+import { AuthClient } from "../modules/auth/config/grpc-client/auth.client";
 
 
 
@@ -32,7 +32,7 @@ export const setUpSocketIO = (server: HttpServer): void => {
     if (!token) {
       return next(new Error('Authentication error'));
     }else{
-      jwt.verify(token, process.env.JWT_SECRET as string,async (err:any, decoded:any) => {
+      jwt.verify(token, process.env.JWT_SECRET as string,async(err:any, decoded:any) => {
         if (err) {
           if(!refreshToken){
             console.log(err,"ithu socket")
@@ -40,11 +40,22 @@ export const setUpSocketIO = (server: HttpServer): void => {
           }
           else{
             try {
-              const { data } = await axios.post(`${process.env.AUTH_REFRESH_URL}`, { token: refreshToken });
-              socket.emit('tokens-updated', {
-                token: data.token,
-                refreshToken: data.refreshToken,
-              });
+              if (token) {
+                console.log(refreshToken,"=-=-=-=");
+                AuthClient.RefreshToken({ token :refreshToken}, (err:any, result:Tokens) => {
+                  if (err) {
+                    console.log(err);
+                    return({ message: "Invalid refresh token" });
+                  } else {
+                    console.log(result,"ithu kondoooy------");
+                    socket.emit('tokens-updated', {
+                      token: result.accessToken,
+                      refreshToken: result.refreshToken,
+                    });                  }
+                });
+              } else {
+                return({message: "Token is missing"});
+              }
             } catch (error:any) {
               console.error('Error refreshing token:', error.message);
               return next(new Error('Authentication error'));
