@@ -41,7 +41,7 @@ export const setUpSocketIO = (server: HttpServer): void => {
           else{
             try {
               if (token) {
-                console.log(refreshToken,"=-=-=-=");
+                console.log(refreshToken,"=-=-=-=" );
                 AuthClient.RefreshToken({ token :refreshToken}, (err:any, result:Tokens) => {
                   if (err) {
                     console.log(err);
