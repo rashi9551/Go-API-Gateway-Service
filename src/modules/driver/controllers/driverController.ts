@@ -73,6 +73,30 @@ export default class driverControl{
           return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
         }
     }
+    report=async(req: Request,
+        res: Response,
+        next: NextFunction
+      ) => {
+        try {        
+          console.log({...req.query,...req.body},"resseyyy"); 
+          const operation = "report-submit";
+          const response: any = await driverRabbitMqClient.produce({...req.query,...req.body}, operation) as any
+          if(response.message==="Success"){
+            const response:any=await rideController.report({ ...req.query, ...req.body }) as unknown as Promise<Message>
+            console.log(response,"ithu ride response");
+            if(response.message==="Success"){
+              res.status(StatusCode.Created).json(response);
+            }else{
+              return res.status(StatusCode.BadRequest).json({ message: 'feedback ride update failed' });
+            }
+          }else{
+            return res.status(StatusCode.BadRequest).json({ message: 'feedback driver update failed' });
+          }
+        } catch (e: any) {
+          console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+        }
+    }
     rideCompleteUpdate=async(data:RidePayment) => {
         try {            
           const operation = "driver-ride-complete-update";

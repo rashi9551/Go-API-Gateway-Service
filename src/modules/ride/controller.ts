@@ -63,6 +63,25 @@ export default class rideController{
             
         }
     };
+    report = (data: Report): Promise<Message> |string => {
+        try {
+            return new Promise<Message>(async (resolve, reject) => {
+                try {
+                const operation = 'update-report'; 
+                const response:Message = await rideRabbitMqClient.produce(data, operation) as Message
+                console.log(response);
+                resolve(response); 
+                } catch (e) {
+                console.error(e);
+                reject({ message: 'Failed to complete ride update' }); 
+                }
+            });
+        } catch (error) {
+            console.log(error);
+            return ""
+            
+        }
+    };
     dashboardData = () => {
         return new Promise((resolve, reject) => {
             const operation = 'get-dashboardData';

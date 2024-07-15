@@ -56,6 +56,12 @@ export interface RidePayment {
     feedback:string,
     driver_id:string,
 }
+  export interface feedback{
+    _id:string,
+    rating:string,
+    reason:string,
+    driver_id:string,
+}
 
 
 interface Ride {
