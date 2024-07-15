@@ -26,7 +26,7 @@ class App{
         this.applyMiddleware()
         this.routes()
     }
-
+    
     private applyMiddleware(): void {
         this.app.use(express.json({ limit: "50mb" }));
         this.app.use(
@@ -43,6 +43,7 @@ class App{
     }
 
     private routes():void{
+        console.log(process.env.SOCKET_FRONTEND_URL,"djfgdh");
         this.app.use('/api/user',userRoute)
         this.app.use('/api/admin',adminRoute)
         this.app.use('/api/driver',driverRoute)
