@@ -15,16 +15,14 @@ export default class userController{
     
     register=async(req:Request,res:Response)=>{
         try {
+            console.log(req.body,"=-=-=-=-");
             const files:Express.Multer.File | undefined =req.file
             let userImage=""
             if(files){
             userImage=await uploadToS3(files)
             }
             const token = req.cookies.otp
-            UserService.Register({ ...req.body,
-                userImage,
-                token,
-                },(err:any,result:Message)=>{
+            UserService.Register({ ...req.body,userImage,token,},(err:any,result:Message)=>{
                 if(err){
                     console.log(err);
                     res.status(StatusCode.BadRequest).json({message:err})

@@ -15,8 +15,7 @@ export default class driverAdminController{
           res.status(StatusCode.Created).json(response);
         } catch (e:any) {
           console.log(e);
-          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
-
+          next(e)
         }
       }
       verifiedDrivers=async(req: Request,

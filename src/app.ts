@@ -14,6 +14,7 @@ import rideRoute from './modules/ride/route'
 import authRoute from './modules/Auth/route'
 import { setUpSocketIO } from "./services/socket";
 import { limiter } from './utils/rateLimitter'
+import globalErrorHandler from './middleware/globalErrorHandler'
 
 class App{
     public app:Application;
@@ -36,6 +37,7 @@ class App{
           })
         );
         this.app.use(compression());
+        this.app.use(globalErrorHandler);
         this.app.use(helmet());
         this.app.use(logger("dev"));
         this.app.use(cookieParser());
