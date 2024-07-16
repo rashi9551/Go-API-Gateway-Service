@@ -19,6 +19,8 @@ export const setUpSocketIO = (server: HttpServer): void => {
   let driverLatitude: number; 
   let driverLongitude: number;
   let rideDetails: RideDetails;
+  let user_id:string
+  let driverId:string
   const io: SocketIOServer = new SocketIOServer(server, {
     cors: {
       origin: process.env.SOCKET_FRONTEND_URL,
@@ -108,6 +110,8 @@ export const setUpSocketIO = (server: HttpServer): void => {
 
     socket.on("acceptRide",async(acceptedRideData:RideDetails)=>{
       try {
+        driverId=acceptedRideData.driver_id
+        user_id=acceptedRideData.user_id
         acceptedRideData.status="Pending";
         acceptedRideData.pin=generatePIN()
         
@@ -120,14 +124,14 @@ export const setUpSocketIO = (server: HttpServer): void => {
           rideRabbitMqClient.produce(acceptedRideData, "ride-create"),
           driverRabbitMqClient.produce({ driverId: acceptedRideData.driver_id }, "updateDriverStatus")
         ]);
-        io.emit("driverConfirmation",acceptedRideData.ride_id)
+        io.emit("driverConfirmation",acceptedRideData.ride_id,driverId)
       } catch (error) {
         console.log(error);
       }
     })
 
     socket.on('forUser',async(ride_id:any)=>{
-      io.emit("userConfirmation",ride_id)
+      io.emit("userConfirmation",ride_id,user_id)
     })
 
     socket.on("verifyRide", async (pin: number) => {
@@ -135,23 +139,23 @@ export const setUpSocketIO = (server: HttpServer): void => {
       const response = await rideRabbitMqClient.produce(pin,"ride-confirm")
       if(response){
         console.log("ride confirmed ------=-=-=-=-==-=-   ");
-        io.emit("rideConfirmed")
+        io.emit("rideConfirmed",{driverId,user_id})
       }else{
           io.emit("error in confirming ride")
       }
     });
 
     socket.on("driverRideFinish",()=>{
-      io.emit("userPaymentPage")
+      io.emit("userPaymentPage",user_id)
     })
 
     socket.on("paymentCompleted",(paymentMode:string,amount:number)=>{
-      io.emit("driverPaymentSuccess",paymentMode,amount)
+      io.emit("driverPaymentSuccess",paymentMode,amount,driverId)
     })
 
     socket.on("chat",(chat:ChatMessage[])=>{
       console.log(chat);
-      io.emit("chat",chat)
+      io.emit("chat",chat,{driverId,user_id})
     })
 
     socket.on("rideCancelled", async (ride_id)=>{
@@ -169,7 +173,7 @@ export const setUpSocketIO = (server: HttpServer): void => {
                   console.log(err);
               }else{
                 console.log("ride cancel updated successfuly",result);
-                io.emit("rideCancelled")
+                io.emit("rideCancelled",driverId)
               }
           })
         }else{
