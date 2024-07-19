@@ -2,6 +2,7 @@ syntax = "proto3";
 package user_package;
 
 service User {
+    rpc testerLogin(testerLoginRequest) returns (testerLoginResponse) {}
     rpc Register(RegisterRequest) returns (RegisterResponse) {}
     rpc CheckUser(CheckUserRequest) returns (CheckUserResponse) {}
     rpc ResendOtp(ResendOtpRequest) returns (ResendOtpResponse) {}
@@ -36,6 +37,19 @@ message RegisterResponse {
 }
 
 
+message testerLoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message testerLoginResponse {
+   string message = 1;
+    string name = 2;
+    string token = 3;
+    string refreshToken = 5;
+    string _id = 4;
+
+}
 message CheckUserRequest {
     string email = 1;
     string mobile = 2;

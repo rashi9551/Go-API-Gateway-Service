@@ -114,7 +114,6 @@ export const setUpSocketIO = (server: HttpServer): void => {
         user_id=acceptedRideData.user_id
         acceptedRideData.status="Pending";
         acceptedRideData.pin=generatePIN()
-        
         acceptedRideData.driverCoordinates = {};
         acceptedRideData.driverCoordinates.latitude = driverLatitude;
         acceptedRideData.driverCoordinates.longitude = driverLongitude;
@@ -135,13 +134,19 @@ export const setUpSocketIO = (server: HttpServer): void => {
     })
 
     socket.on("verifyRide", async (pin: number) => {
-      console.log("pin check",pin);
-      const response = await rideRabbitMqClient.produce(pin,"ride-confirm")
-      if(response){
-        console.log("ride confirmed ------=-=-=-=-==-=-   ");
-        io.emit("rideConfirmed",{driverId,user_id})
-      }else{
-          io.emit("error in confirming ride")
+      try {
+        console.log("pin check",pin);
+        const response = await rideRabbitMqClient.produce(pin,"ride-confirm")
+        if(response){
+          console.log("ride confirmed ------=-=-=-=-==-=-   ");
+          io.emit("rideConfirmed",{driverId,user_id})
+        }else{
+            io.emit("error in confirming ride")
+        }
+        
+      } catch (error) {
+        console.log(error);
+        
       }
     });
 

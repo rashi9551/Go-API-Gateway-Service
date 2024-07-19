@@ -7,6 +7,7 @@ import { isValidated } from '../Auth/controller'
 const driverRoute:Application=express()
 const AuthController= new driverAuthController()
 const driverController= new driverControl()
+driverRoute.post("/testerLogin", AuthController.testerLogin);
 driverRoute.post("/checkLoginDriver", AuthController.checkLogin);
 driverRoute.post("/checkGoogleLoginDriver", AuthController.checkGoogleLoginDriver);
 driverRoute.post("/registerDriver", AuthController.register);

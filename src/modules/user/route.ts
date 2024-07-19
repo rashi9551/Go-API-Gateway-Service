@@ -7,6 +7,7 @@ const userRoute:Application=express()
 
 const controller=new userController()
 
+userRoute.post('/testerLogin',controller.testerLogin)
 
 userRoute.post('/checkUser',controller.checkUser)
 userRoute.post('/register',upload.single('userImage'),controller.register)

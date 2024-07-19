@@ -5,6 +5,22 @@ import  uploadToS3 from '../../../services/s3'
 import { AuthResponse, Coordinates, Message } from "../../../interfaces/interface"
 export default class driverAuthController{
 
+    testerLogin=async(req: Request,
+      res: Response,
+      next: NextFunction
+    ) => {
+      try {
+        const operation = "tester-login";
+        const response: AuthResponse = await driverRabbitMqClient.produce(req.body, operation) as AuthResponse
+        console.log(response);
+        res.status(StatusCode.Created).json(response);
+      } catch (e: any) {
+        console.log(e);
+        return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+
+      }
+    }
+
     checkLogin=async(req: Request,
         res: Response,
         next: NextFunction
@@ -37,6 +53,7 @@ export default class driverAuthController{
 
         }
       }
+
 
       register=async(req: Request,
         res: Response,

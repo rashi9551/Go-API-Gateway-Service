@@ -6,7 +6,6 @@ import Stripe from "stripe";
 import rideControl from '../ride/controller';
 import driverControl from '../driver/controllers/driverController';
 import { AuthResponse, Message, RideInterface, RidePayment, UserInterface } from '../../interfaces/interface';
-import { RideDetails } from '../../interfaces/mongo';
 
 const rideController=new rideControl()
 const driverController=new driverControl()
@@ -51,6 +50,26 @@ export default class userController{
                     sameSite: "none",
                     secure: true,
                     });
+                    res.status(StatusCode.Created).json(result)
+                }
+            })
+        } catch (error) {
+            console.log(error);
+            return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+        }   
+    }
+
+    testerLogin=(req:Request,res:Response)=>{    
+        try {
+            console.log(req.body);
+            
+            UserService.testerLogin(req.body,(err:any,result:Message)=>{
+                if(err){
+                    console.log(err);
+                    res.status(StatusCode.BadRequest).json({message:err})
+                }else{
+                    console.log(result);
+                    
                     res.status(StatusCode.Created).json(result)
                 }
             })
