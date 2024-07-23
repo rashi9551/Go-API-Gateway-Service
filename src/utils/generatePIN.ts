@@ -4,7 +4,9 @@ export const generatePIN = (): number => {
       pin += Math.floor(Math.random() * 10);
     }
     console.log(pin,"ithu ride pin");
-    
+    if(pin.length<6){
+      generatePIN()
+    }
     return parseInt(pin);
   };
 

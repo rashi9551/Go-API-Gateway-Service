@@ -17,7 +17,6 @@ export default class driverControl{
         try {            
           const operation = "driver-getData";
           const response: DriverInterface = await driverRabbitMqClient.produce({...req.query}, operation) as DriverInterface
-          console.log(response,"ithu driver data");
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);
