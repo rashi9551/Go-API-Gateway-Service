@@ -9,7 +9,6 @@ import jwt from 'jsonwebtoken';
 import { AuthenticatedSocket, AuthResponse, ChatMessage, Driver, Tokens } from "../interfaces/interface";
 import { calculateDistance } from "../utils/distanceCalculation";
 import { AuthClient } from "../modules/Auth/config/grpc-client/auth.client";
-import otpGenerator from 'otp-generator'
 import 'dotenv/config';
 
 
