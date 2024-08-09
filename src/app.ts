@@ -55,7 +55,7 @@ class App{
 
     public startServer(port:number):void{
         this.server.listen(port,()=>{
-            console.log(`API-Gateway started on with the help of kubernet ${port}`);
+            console.log(`API-Gateway started on with the helps of kubernet ${port}`);
             
         })
     }
