@@ -27,9 +27,24 @@ export default class driverAuthController{
       ) => {
         try {
           console.log(req.body,"driver login");
-          const {mobile}=req.body
+          const {email}=req.body
           const operation = "login-check";
-          const response: Message = await driverRabbitMqClient.produce({mobile}, operation) as Message
+          const response: Message = await driverRabbitMqClient.produce({email}, operation) as Message
+          res.status(StatusCode.Created).json(response);
+        } catch (e: any) {
+          console.log(e);
+          return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+        }
+      }
+      verifyOtp=async(req: Request,
+        res: Response,
+        next: NextFunction
+      ) => {
+        try {
+          console.log(req.body,"driver verifyOtp");
+          const {otp,email}=req.body
+          const operation = "driver-verifyOtp";
+          const response: Message = await driverRabbitMqClient.produce({otp,email}, operation) as Message
           res.status(StatusCode.Created).json(response);
         } catch (e: any) {
           console.log(e);

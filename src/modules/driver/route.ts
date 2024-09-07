@@ -9,6 +9,7 @@ const AuthController= new driverAuthController()
 const driverController= new driverControl()
 driverRoute.post("/testerLogin", AuthController.testerLogin);
 driverRoute.post("/checkLoginDriver", AuthController.checkLogin);
+driverRoute.post("/verifyOtp", AuthController.verifyOtp);
 driverRoute.post("/checkGoogleLoginDriver", AuthController.checkGoogleLoginDriver);
 driverRoute.post("/registerDriver", AuthController.register);
 driverRoute.post("/checkDriver", AuthController.checkDriver);
