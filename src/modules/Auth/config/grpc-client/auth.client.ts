@@ -10,8 +10,6 @@ const packageDef = protoLoader.loadSync(path.resolve(__dirname, '../proto/auth.p
 const grpcObject = (grpc.loadPackageDefinition(packageDef) as unknown) as any
 
 const Domain=process.env.NODE_ENV==='dev'?process.env.DEV_DOMAIN:process.env.PRO_DOMAIN_AUTH
-console.log(`${Domain}:${process.env.AUTH_GRPC_PORT}-=-=-=-=-=-=-`);
-
 const AuthClient = new grpcObject.authpackage.Auth(
     `${Domain}:${process.env.AUTH_GRPC_PORT}`, grpc.credentials.createInsecure(),
     console.log("auth server started")

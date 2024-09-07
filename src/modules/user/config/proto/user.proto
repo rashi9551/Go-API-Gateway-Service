@@ -8,6 +8,7 @@ service User {
     rpc ResendOtp(ResendOtpRequest) returns (ResendOtpResponse) {}
     rpc CheckGoogleLoginUser(CheckGoogleLoginUserRequest) returns (CheckGoogleLoginUserResponse) {}
     rpc CheckLoginUser(CheckLoginUserRequest) returns (CheckLoginUserResponse) {}
+    rpc verifyOtp(verifyOtpRequest) returns (verifyOtpResponse) {}
     rpc GetUser(GetUserRequest) returns (GetUserResponse) {}
     rpc ProfileUpdate(ProfileUpdateRequest) returns (ProfileUpdateResponse) {}
     rpc addWalletBalance(addWalletBalanceRequest) returns (addWalletBalanceResponse) {}
@@ -58,7 +59,6 @@ message CheckUserRequest {
 message CheckUserResponse {
     string message = 1;
     string token = 2;
-
 }
 
 
@@ -89,7 +89,14 @@ message CheckGoogleLoginUserResponse {
 
 
 message CheckLoginUserRequest {
-    int64 mobile = 1;
+    string email = 1;
+}
+message verifyOtpRequest {
+    int64 otp = 1;
+    string email = 2;
+}
+message verifyOtpResponse {
+    string message = 1;
 }
 
 message CheckLoginUserResponse {
@@ -98,6 +105,7 @@ message CheckLoginUserResponse {
     string token = 3;
     string refreshToken = 5;
     string _id = 4;
+    string otp = 6;
 }
 
 

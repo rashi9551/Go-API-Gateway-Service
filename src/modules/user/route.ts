@@ -16,6 +16,7 @@ userRoute.post('/resendOtp',controller.resendOtp)
 
 userRoute.post('/checkGoogleLoginUser',controller.checkGoogleLoginUser);
 userRoute.post('/checkLoginUser',controller.checkLoginUser);
+userRoute.post('/verifyOtp',controller.verifyOtp);
 
 userRoute.get('/userData',isValidated,controller.getUser);
 userRoute.post('/profileUpdate',isValidated,controller.profileUpdate);

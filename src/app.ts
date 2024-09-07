@@ -45,7 +45,6 @@ class App{
     }
 
     private routes():void{
-        console.log(process.env.SOCKET_FRONTEND_URL,"djfgdh");
         this.app.use('/api/user',userRoute)
         this.app.use('/api/admin',adminRoute)
         this.app.use('/api/driver',driverRoute)

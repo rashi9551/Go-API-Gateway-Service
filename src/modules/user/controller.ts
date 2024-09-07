@@ -137,6 +137,22 @@ export default class userController{
             return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
         }
     }
+    verifyOtp=(req:Request,res:Response)=>{
+        try {
+            console.log(req.body);
+            UserService.verifyOtp(req.body,(err:any,result:AuthResponse)=>{
+                if(err){
+                    res.status(StatusCode.BadRequest).json({message:err})
+                }else{
+                    console.log("result ",result);
+                    res.status(StatusCode.Created).json(result)
+                }
+            })
+        } catch (error) {
+            console.log(error);
+            return res.status(StatusCode.InternalServerError).json({ message: 'Internal Server Error' });
+        }
+    }
 
     getUser=(req:Request,res:Response)=>{
         try {
